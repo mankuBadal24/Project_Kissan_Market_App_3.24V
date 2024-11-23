@@ -143,10 +143,7 @@ class _FarmerRegistrationState extends State<FarmerRegistrationScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("Farmer Registration Page"),
-        centerTitle: true,
-      ),
+      appBar:CustomWidgets.appBar("Farmer Registration Page"),
       body: SingleChildScrollView(
         child: Column(
           children: [

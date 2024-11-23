@@ -2,6 +2,7 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
+import 'package:kissan_market_app/Api/ApiURL.dart';
 import 'package:kissan_market_app/CustomWidgets/CustomWidgets.dart';
 import 'package:kissan_market_app/Theme/AppColors.dart';
 import 'package:quickalert/widgets/quickalert_dialog.dart';
@@ -15,7 +16,7 @@ class AddCropScreen extends StatefulWidget{
 }
 class _AddCropScreenState extends State<AddCropScreen>{
   bool _isLoading=false;
-  String URL = 'http://192.168.133.74:8080/';
+  String URL= ApiURL.getURL();
   String ? selectedCropCode;
   String ? selectedPulseCode;
   String? selectedCropDesc;

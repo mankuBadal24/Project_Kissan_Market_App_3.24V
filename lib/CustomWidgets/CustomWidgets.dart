@@ -3,8 +3,12 @@ import 'package:flutter/material.dart';
 import '../Theme/AppColors.dart';
 
 class CustomWidgets{
+  ///textNormal
   static textNormal(String text){
     return Text(text,style:const TextStyle(color: AppColors.textColorWhite),);
+  }
+  static textBlue(String text){
+    return Text(text,style:const TextStyle(color: AppColors.primaryColor),);
   }
   static appBar(String title){
     return AppBar(title: CustomWidgets.textNormal(title),backgroundColor: AppColors.appBarColor,);
@@ -29,7 +33,7 @@ class CustomWidgets{
   }
 
   static ElevatedButton buildElevatedButton({
-    required String text,
+    required String btnText,
     required VoidCallback onPressed,
     Color color = AppColors.buttonColor, // Default color if not passed
     double elevation = 2.0,     // Default elevation if not passed
@@ -41,7 +45,7 @@ class CustomWidgets{
         backgroundColor: color,          // Set the button color
         elevation: elevation,    // Set the button elevation
       ),
-      child: CustomWidgets.textNormal("Submit"),         // Set the text of the button
+      child: CustomWidgets.textNormal(btnText),         // Set the text of the button
     );
   }
 

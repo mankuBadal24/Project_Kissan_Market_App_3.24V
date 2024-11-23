@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/services.dart';
+import 'package:kissan_market_app/Api/ApiURL.dart';
 import 'package:kissan_market_app/BuyerHomeScreen.dart';
 import 'package:quickalert/widgets/quickalert_dialog.dart';
 import 'package:quickalert/models/quickalert_type.dart';
@@ -18,7 +19,7 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  String URL = 'http://192.168.133.74:8080/';
+  String URL = ApiURL.getURL();
   bool _bgimageflag = true;
   bool crl_avtar_img_flag = true;
   bool _isLoading=false;
@@ -64,7 +65,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   Future<void> userRegistration() async {
     try {
-      String uri = '${URL}/api/register';
+      String uri = '${URL}api/register';
       final res = await http.post(
         Uri.parse(uri),
         headers: {
@@ -135,6 +136,7 @@ class _LoginScreenState extends State<LoginScreen> {
     setState(() {
       _isLoading=true;
     });
+    try{
     const  timeoutDuration= Duration(seconds: 5);
     final Map<String, dynamic> params = {
       'phoneNumber': int.parse(phoneCtrl.text),
@@ -152,8 +154,7 @@ class _LoginScreenState extends State<LoginScreen> {
     );
 
     final response= await Future.any([loginRequest,Future.delayed(timeoutDuration)]);
-print("reponse          ---${response.statusCode}");
-    try{
+
       if(response!=null){
         if(response.statusCode==200){
           var responseMsg = response.body;
@@ -186,9 +187,7 @@ print("reponse          ---${response.statusCode}");
             // autoCloseDuration: const Duration(seconds: 2)
             );
       }
-      setState(() {
-        _isLoading=false;
-      });
+
     }
     catch(e){
 
@@ -197,7 +196,12 @@ print("reponse          ---${response.statusCode}");
           context: context,
           type: QuickAlertType.error,
           text: "Some Exception Occurred....",
-          autoCloseDuration: const Duration(seconds: 2));
+      );
+    }
+    finally{
+      setState(() {
+        _isLoading=false;
+      });
     }
 
 
