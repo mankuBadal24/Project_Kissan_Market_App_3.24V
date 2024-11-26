@@ -2,18 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:kissan_market_app/AddCropScreen.dart';
 import 'package:kissan_market_app/AppDrawerMenuScreen.dart';
 import 'package:kissan_market_app/LoginScreen.dart';
+import 'package:kissan_market_app/SaveUserData/SaveUserData.dart';
 import 'package:kissan_market_app/ViewCropsScreen.dart';
 
 import 'Theme/AppColors.dart';
 
 class FarmerHomeScreen extends StatefulWidget{
-  const FarmerHomeScreen({super.key});
+  SaveUserData saveUserData=SaveUserData();
+  FarmerHomeScreen({super.key,required this.saveUserData});
   @override
   State<FarmerHomeScreen> createState()=>_FarmerHomeScreenState();
   
 }
 class _FarmerHomeScreenState extends State<FarmerHomeScreen>{
-  PageController _pageController = PageController();
+  final PageController _pageController = PageController();
   int _currentIndex = 0;
   void _onPageChanged(int index) {
     setState(() {
@@ -26,6 +28,13 @@ class _FarmerHomeScreenState extends State<FarmerHomeScreen>{
     _pageController.dispose();
     super.dispose();
   }
+
+  @override
+  void initState() {
+    super.initState();
+    print(widget.saveUserData.getUserId());
+  }
+
 
   Widget _buildDotIndicator(int index) {
     return Row(
@@ -74,7 +83,7 @@ class _FarmerHomeScreenState extends State<FarmerHomeScreen>{
                             backgroundColor: AppColors.primaryColor,
                             heroTag: 'Add Crop',
                             onPressed: (){
-                              Navigator.push(context, MaterialPageRoute(builder: (context)=>const AddCropScreen()));
+                              Navigator.push(context, MaterialPageRoute(builder: (context)=> AddCropScreen(saveUserData: widget.saveUserData,)));
                             },
                             tooltip: 'Add Crops',
                             shape:const CircleBorder(),
@@ -126,7 +135,7 @@ class _FarmerHomeScreenState extends State<FarmerHomeScreen>{
                           child: FloatingActionButton.large(
                             backgroundColor: AppColors.primaryColor,
                             onPressed: (){
-                              Navigator.push(context, MaterialPageRoute(builder: (context)=>const ViewCropsScreen()));
+                              Navigator.push(context, MaterialPageRoute(builder: (context)=> ViewCropsScreen(saveUserData: widget.saveUserData,)));
                             },
                             heroTag: "View Added Crops",
                             tooltip: 'View Added crops',

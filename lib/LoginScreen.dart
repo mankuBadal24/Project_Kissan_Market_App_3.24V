@@ -2,14 +2,18 @@ import 'dart:convert';
 import 'package:flutter/services.dart';
 import 'package:kissan_market_app/Api/ApiURL.dart';
 import 'package:kissan_market_app/BuyerHomeScreen.dart';
+import 'package:kissan_market_app/Providers/UserUpdateNotifier.dart';
+import 'package:kissan_market_app/SaveUserData/SaveUserData.dart';
 import 'package:quickalert/widgets/quickalert_dialog.dart';
 import 'package:quickalert/models/quickalert_type.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:provider/provider.dart';
 import 'package:kissan_market_app/FarmerHomeScreen.dart';
 
 import 'CustomWidgets/CustomWidgets.dart';
 import 'FarmerRegistrationScreen.dart';
+import 'SharedPreferences/UserSharedPreferences.dart';
 import 'Theme/AppColors.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -20,12 +24,15 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   String URL = ApiURL.getURL();
+  var responseMsg;
+  UserSharedPreferences userSharedPreferences=UserSharedPreferences();
+  SaveUserData saveUserData=SaveUserData();
   bool _bgimageflag = true;
   bool crl_avtar_img_flag = true;
   bool _isLoading=false;
   bool _isObscured = true;
   bool _isCardVisible = true;
-   bool _isFarmer=true;
+  late String typeOfUser;
   TextEditingController phoneCtrl = TextEditingController();
   TextEditingController nameCtrl = TextEditingController();
   TextEditingController passwordCtrl = TextEditingController();
@@ -38,32 +45,12 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
 
-  /// the function is for test login when the backend is  not available
-   testLogin(String phoneNumber, String password){
-    if(phoneNumber=='9999999999'&& password=='123'){
-      QuickAlert.show(
-        context: context,
-        type: QuickAlertType.success,
-        text: "User Login succesfully",
-        autoCloseDuration: const Duration(seconds: 1),
-      );
-      Future.delayed(const Duration(seconds: 1), () {
-        Navigator.push(context,
-            MaterialPageRoute(builder: (context) => const FarmerHomeScreen()));
-        textFieldClear();
-      });
-    }
-    else{
-      QuickAlert.show(
-          context: context,
-          type: QuickAlertType.error,
-          text: "Username or Password is Incorrect",
-          autoCloseDuration: const Duration(seconds: 1));
-    }
-  }
-
-
   Future<void> userRegistration() async {
+    setState(() {
+      _isLoading=true;
+    });
+
+    FocusScope.of(context).requestFocus(FocusNode());
     try {
       String uri = '${URL}api/register';
       final res = await http.post(
@@ -74,33 +61,31 @@ class _LoginScreenState extends State<LoginScreen> {
         body: jsonEncode({
           'name': nameCtrl.text,
           'phoneNumber': phoneCtrl.text,
-          'password': passwordCtrl.text
+          'password': passwordCtrl.text,
+          'role':typeOfUser
         }),
       );
 
-      showSuccesAlert(String message){
-        AlertDialog(
-          title: const Text('Success'),
-          content:Text(message),
-          actions: [
-            TextButton(onPressed: (){}, child: const Text("Okay")),
 
-          ],
-        );
-      }
 
       final responseCode = res.statusCode;
       print("responecode...................$responseCode");
-      var response = res.body;
-      if (response=="User registered successfully!") {
+      responseMsg = jsonDecode(res.body);
+      print(responseMsg);
+      if (responseCode==200||responseCode==201) {
+        showQuickAlert('Login Successful','success');
+        saveUserData.saveUserId(responseMsg['userId'].toString());
+        print(saveUserData.getUserId());
+        saveUserData.saveTypeOfUser(typeOfUser);
+        saveUserData.saveName(nameCtrl.text.toString());
         textFieldClear();
-
-         showSuccesAlert("User registered successfully!");
-         if(_isFarmer){
+        showQuickAlert("User Registered Successfully", 'success');
+          await Future.delayed(const Duration(seconds: 1));
+         if(typeOfUser=='FR'){
            Future.delayed(const Duration(seconds: 1));
-           Navigator.push(context, MaterialPageRoute(builder: (context)=>const FarmerRegistrationScreen()),);
+           Navigator.push(context, MaterialPageRoute(builder: (context)=>FarmerRegistrationScreen(saveUserData: saveUserData,)),);
          }
-         else if(_isFarmer){
+         else if(typeOfUser=='BR'){
            Future.delayed(const Duration(seconds: 1));
            Navigator.push(context, MaterialPageRoute(builder: (context)=>const BuyerHomeScreen()),);
          }
@@ -108,12 +93,18 @@ class _LoginScreenState extends State<LoginScreen> {
 
 
       } else {
-        showSnackBarMessage("Some Error Occurred....");
+        showQuickAlert("Some Error Occurred....","warning" );
       }
     } catch (e, stackTrace) {
       print("catch is running ${stackTrace}");
       print("catch is running $e");
-      showSnackBarMessage("Some Exception Occurred....");
+      showSnackBarMessage("Some Exception Occurred....$e");
+      showQuickAlert("Some Exception Occurred....", "error");
+    }
+    finally{
+      setState(() {
+        _isLoading=false;
+      });
     }
   }
 
@@ -157,35 +148,33 @@ class _LoginScreenState extends State<LoginScreen> {
 
       if(response!=null){
         if(response.statusCode==200){
-          var responseMsg = response.body;
+          var responseMsg = jsonDecode(response.body);
+          print(responseMsg);
+          saveUserData.saveUserId(responseMsg['id'].toString());
+          saveUserData.saveTypeOfUser(responseMsg['role']);
+          saveUserData.saveName(responseMsg['name']);
             textFieldClear();
-            QuickAlert.show(
-              context: context,
-              type: QuickAlertType.success,
-              text: "User Login succesfully",
-              autoCloseDuration: const Duration(seconds: 1),
-            );
+          if(responseMsg['role']=='FR'){
             Future.delayed(const Duration(seconds: 1), () {
               Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => const FarmerHomeScreen()));
+                  MaterialPageRoute(builder: (context) =>  FarmerHomeScreen(saveUserData: saveUserData,)));
             });
+          }
+          else if(responseMsg['role']=='BR'){
+            Future.delayed(const Duration(seconds: 1), () {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => const BuyerHomeScreen()));
+            });
+          }
+
 
         }
         else{
-          QuickAlert.show(
-              context: context,
-              type: QuickAlertType.warning,
-              text: 'response Code...${response.statusCode}',
-              autoCloseDuration: const Duration(seconds: 1));
+         showQuickAlert(response.statusCode,'warning');
         }
       }
       else{
-        QuickAlert.show(
-            context: context,
-            type: QuickAlertType.error,
-            text: 'Server Unreachable...',
-            // autoCloseDuration: const Duration(seconds: 2)
-            );
+        showQuickAlert('Server Unreachable...','error');
       }
 
     }
@@ -205,6 +194,30 @@ class _LoginScreenState extends State<LoginScreen> {
     }
 
 
+  }
+  showQuickAlert(String message ,String type){
+    if(type=='success'){
+      QuickAlert.show(
+        context: context,
+        type: QuickAlertType.success,
+        text: message,
+        autoCloseDuration: const Duration(seconds: 1),
+      );
+    }
+    else if(type=='error'){
+      QuickAlert.show(
+        context: context,
+        type: QuickAlertType.error,
+        text: message,
+      );
+    }
+    else if(type=='warning'){
+      QuickAlert.show(
+        context: context,
+        type: QuickAlertType.warning,
+        text: message,
+      );
+    }
   }
 
   bool registerDataValidation(){
@@ -545,7 +558,6 @@ class _LoginScreenState extends State<LoginScreen> {
                                       if (loginDataValidation()){
                                         ///this function initiate login procedure
                                         userLogin();
-                                        // testLogin(phoneCtrl.text, passwordCtrl.text);
                                       }
                                      
                                     },
@@ -702,10 +714,13 @@ class _LoginScreenState extends State<LoginScreen> {
                                               elevation: 0 // Text color
                                           ),
                                           onPressed: () {
-                                            _isFarmer=false;
+                                            typeOfUser='BR';
                                             if(registerDataValidation()){
                                               /// below function used to sent data for registration of the user to backend
                                               userRegistration();
+                                                  Provider.of<UserUpdateNotifier>(context,listen: false).saveTypeOfUser(typeOfUser);
+                                              Provider.of<UserUpdateNotifier>(context,listen: false).saveUserId(responseMsg['id']);
+                                              Provider.of<UserUpdateNotifier>(context,listen: false).saveName(responseMsg['name']);
 
                                             }
 
@@ -735,9 +750,11 @@ class _LoginScreenState extends State<LoginScreen> {
                                           ),
                                           onPressed: () {
                                             if(registerDataValidation()){
-                                              _isFarmer=true;
+                                              typeOfUser='FR';
                                               /// below function used to sent data for registration of the user to backend
                                               userRegistration();
+
+
 
                                             }
 

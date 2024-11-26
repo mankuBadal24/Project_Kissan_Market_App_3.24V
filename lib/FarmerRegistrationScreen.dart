@@ -1,14 +1,22 @@
 
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:kissan_market_app/CustomWidgets/CustomWidgets.dart';
 import 'package:kissan_market_app/FarmerHomeScreen.dart';
 import 'package:kissan_market_app/Theme/AppColors.dart';
 import 'package:kissan_market_app/json_data_classes/IndianStateCities.dart';
+import 'Api/ApiURL.dart';
+import 'SaveUserData/SaveUserData.dart';
+import 'SharedPreferences/UserSharedPreferences.dart';
 import 'json_data_classes/TypeOfFarmer.dart';
+import 'package:quickalert/widgets/quickalert_dialog.dart';
+import 'package:quickalert/models/quickalert_type.dart';
 
 class FarmerRegistrationScreen extends StatefulWidget {
-  const FarmerRegistrationScreen({super.key});
+  SaveUserData saveUserData=SaveUserData();
+   FarmerRegistrationScreen({super.key,required this.saveUserData});
 
   @override
   State<FarmerRegistrationScreen> createState() => _FarmerRegistrationState();
@@ -18,6 +26,12 @@ class _FarmerRegistrationState extends State<FarmerRegistrationScreen> {
   String? selectedTypeOfFarmer;         /// variable to hold the type of farmer value
   String? selectedState;
   String? selectedCity;
+
+
+  UserSharedPreferences userSharedPreferences=UserSharedPreferences();
+  bool _isLoading = false;
+  final bool _isDisposed = false;
+  String URL = ApiURL.getURL();
 
   TextEditingController houseNoCtrl=TextEditingController();
   TextEditingController pinCodeCtrl=TextEditingController();
@@ -133,9 +147,107 @@ class _FarmerRegistrationState extends State<FarmerRegistrationScreen> {
     }
   }
 
+
+
+  Future<void>registerFarmer() async {
+    // Hide the keyboard when updating the crop
+    FocusScope.of(context).requestFocus(FocusNode());
+
+    setState(() {
+      _isLoading = true;
+    });
+
+    try {
+      const timeoutDuration = Duration(seconds: 5);
+      String uri = '${URL}api/farmer-register';
+      final updateRequest = http.post(
+        Uri.parse(uri),
+        headers: {
+          'Content-Type': 'application/json', // Set to JSON
+        },
+        body: jsonEncode(
+          {
+            "id":int.parse(widget.saveUserData.getUserId()),
+            "farmerType":selectedTypeOfFarmer,
+            "state":selectedState,
+            "city":selectedCity,
+            "area":houseNoCtrl.text,
+            "pincode":pinCodeCtrl.text
+
+          },
+        ),
+      );
+
+      final response = await Future.any([updateRequest, Future.delayed(timeoutDuration)]);
+
+      if (_isDisposed) return;  // If widget is disposed, exit the function early.
+
+      if (response != null) {
+        print(response.statusCode);
+        if (response.statusCode == 200||response.statusCode == 201) {
+          var responseMsg = response.body;
+          // textFieldClear();
+          showQuickAlert(responseMsg, 'success');
+         await Future.delayed(const Duration(seconds: 1));
+         Navigator.pushReplacement(context,MaterialPageRoute(builder: (context)=> FarmerHomeScreen(saveUserData: widget.saveUserData,)));
+        } else {
+          showQuickAlert(response.statusCode, 'warning');
+        }
+      } else {
+        showQuickAlert('Server Unreachable...', 'warning');
+      }
+    } catch (e) {
+      showQuickAlert("Some Exception Occurred..$e", 'error');
+      if (!_isDisposed) {
+      }
+    } finally {
+      if (!_isDisposed) {
+        setState(() {
+          _isLoading = false;
+        });
+
+      }
+    }
+  }
+  showQuickAlert(String message ,String type){
+    if(type=='success'){
+      QuickAlert.show(
+        context: context,
+        type: QuickAlertType.success,
+        text: message,
+        autoCloseDuration: const Duration(seconds: 1),
+      );
+    }
+    else if(type=='error'){
+      QuickAlert.show(
+        context: context,
+        type: QuickAlertType.error,
+        text: message,
+      );
+    }
+    else if(type=='warning'){
+      QuickAlert.show(
+        context: context,
+        type: QuickAlertType.warning,
+        text: message,
+      );
+    }
+  }
+
+  //
+  //
+  // Future<void> _loadUserData() async {
+  //   Map<String, String?> userData = await userSharedPreferences.loadUserData();
+  //   _name = userData['name'] ?? "No name set";
+  //   _userId = userData['userId'] ?? "No ID set";
+  //   _typeOfUser = userData['typeOfUser'] ?? "No type set";
+  //
+  // }
+
   @override
   void initState() {
     super.initState();
+    print(widget.saveUserData.getUserId());
     setTypeOfFarmerDropdownItems();
     setIndianStateDropDownItems();
   }
@@ -144,169 +256,174 @@ class _FarmerRegistrationState extends State<FarmerRegistrationScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar:CustomWidgets.appBar("Farmer Registration Page"),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            // Type of Farmer Dropdown
-            Padding(
-              padding: const EdgeInsets.only(left: 8),
-              child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                 const Text("Type Of farmer",style: TextStyle(fontSize: 15),),
-                  DropdownButton<String>(
-                    hint: const Text("Type Of Farmer"),
-                    focusColor: Colors.transparent,
-                    padding: const EdgeInsets.all(10.0),
-                    value: selectedTypeOfFarmer,
-                    onChanged: (String? newValue) {
-                      setState(() {
-                        selectedTypeOfFarmer = newValue!;
-                      });
-                    },
-                    items: typeOfFarmerListItems,
-                  ),
-                ],
-              ),
-            ),
-            Container(
-              height: 4,
-              color: AppColors.primaryColor,
-            ),
-
-            // Indian State Dropdown
-            Padding(
-              padding: const EdgeInsets.only(left: 8),
-              child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children:   [
-                  const Text("State",style: TextStyle(fontSize: 15),),
-                  DropdownButton<String>(
-                    hint:const Text('Select State'),
-                    value: selectedState,
-
-                    padding: const EdgeInsets.all(10.0),
-                    onChanged: (String? newValue) {
-                      setState(() {
-                        selectedState = newValue;
-                        selectedCity = null; // Reset city when state changes
-                        setCity();
-                      });
-                    },
-                    items: indianStateList.keys.map((dynamic state) {
-                      return DropdownMenuItem<String>(
-                        value: state,
-                        child: Text(state),
-                      );
-                    }).toList(),
-                  ),
-                ],
-              ),
-            ),
-            Container(
-              height: 4,
-              color: Colors.blueAccent,
-            ),
-
-
-
-
-            // City Dropdown
-            if (selectedState != null)
-              Padding(
-                padding: const EdgeInsets.only(left: 8.0),
-                child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    const Text("City",style: TextStyle(fontSize: 15)),
-                    DropdownButton<String>(
-                      hint:const Text('Select City'),
-                      value: selectedCity,
+      body: Stack(
+        children: [
+          SingleChildScrollView(
+            child: Column(
+              children: [
+                // Type of Farmer Dropdown
+                Padding(
+                  padding: const EdgeInsets.only(left: 8),
+                  child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                     const Text("Type Of farmer",style: TextStyle(fontSize: 15),),
+                      DropdownButton<String>(
+                        hint: const Text("Type Of Farmer"),
+                        focusColor: Colors.transparent,
                         padding: const EdgeInsets.all(10.0),
-
-                      onChanged: (String? newValue) {
-                        setState(() {
-                          selectedCity = newValue;
-                        });
-                      },
-                      items: indianCitiesItems
-                      // indianStateList[selectedState]!
-                      //     .map((String city) {
-                      //   return DropdownMenuItem<String>(
-                      //     value: city,
-                      //     child: Text(city),
-                      //   );
-                      // }).toList(),
-                    ),
-                  ],
+                        value: selectedTypeOfFarmer,
+                        onChanged: (String? newValue) {
+                          setState(() {
+                            selectedTypeOfFarmer = newValue!;
+                          });
+                        },
+                        items: typeOfFarmerListItems,
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-            if (selectedState != null)
-            Container(
-              height: 4,
-              color: Colors.blueAccent,
-            ),
-
-            // Additional Form Fields (e.g., House No./Village/Local Area and PinCode)
-
-            CustomWidgets.textField("House No./Village/Local Area", houseNoCtrl),
-
-            Container(
-              padding: const EdgeInsets.all(8.0),
-              decoration: const BoxDecoration(
-                  border: Border(
-                      bottom: BorderSide(
-                          color: AppColors.borderColor))),
-              child: TextFormField(
-                inputFormatters: [
-                  FilteringTextInputFormatter.digitsOnly,
-                  LengthLimitingTextInputFormatter(6)
-                ],
-                controller: pinCodeCtrl,
-                style: const TextStyle(
+                Container(
+                  height: 4,
                   color: AppColors.primaryColor,
                 ),
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                  labelText: 'PinCode',
-                  labelStyle: TextStyle(color: AppColors.primaryColor),
+
+                // Indian State Dropdown
+                Padding(
+                  padding: const EdgeInsets.only(left: 8),
+                  child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children:   [
+                      const Text("State",style: TextStyle(fontSize: 15),),
+                      DropdownButton<String>(
+                        hint:const Text('Select State'),
+                        value: selectedState,
+
+                        padding: const EdgeInsets.all(10.0),
+                        onChanged: (String? newValue) {
+                          setState(() {
+                            selectedState = newValue;
+                            selectedCity = null; // Reset city when state changes
+                            setCity();
+                          });
+                        },
+                        items: indianStateList.keys.map((dynamic state) {
+                          return DropdownMenuItem<String>(
+                            value: state,
+                            child: Text(state),
+                          );
+                        }).toList(),
+                      ),
+                    ],
+                  ),
+                ),
+                Container(
+                  height: 4,
+                  color: Colors.blueAccent,
+                ),
+
+
+
+
+                // City Dropdown
+                if (selectedState != null)
+                  Padding(
+                    padding: const EdgeInsets.only(left: 8.0),
+                    child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text("City",style: TextStyle(fontSize: 15)),
+                        DropdownButton<String>(
+                          hint:const Text('Select City'),
+                          value: selectedCity,
+                            padding: const EdgeInsets.all(10.0),
+
+                          onChanged: (String? newValue) {
+                            setState(() {
+                              selectedCity = newValue;
+                            });
+                          },
+                          items: indianCitiesItems
+                          // indianStateList[selectedState]!
+                          //     .map((String city) {
+                          //   return DropdownMenuItem<String>(
+                          //     value: city,
+                          //     child: Text(city),
+                          //   );
+                          // }).toList(),
+                        ),
+                      ],
+                    ),
+                  ),
+                if (selectedState != null)
+                Container(
+                  height: 4,
+                  color: Colors.blueAccent,
+                ),
+
+                // Additional Form Fields (e.g., House No./Village/Local Area and PinCode)
+
+                CustomWidgets.textField("House No./Village/Local Area", houseNoCtrl),
+
+                Container(
+                  padding: const EdgeInsets.all(8.0),
+                  decoration: const BoxDecoration(
+                      border: Border(
+                          bottom: BorderSide(
+                              color: AppColors.borderColor))),
+                  child: TextFormField(
+                    inputFormatters: [
+                      FilteringTextInputFormatter.digitsOnly,
+                      LengthLimitingTextInputFormatter(6)
+                    ],
+                    controller: pinCodeCtrl,
+                    style: const TextStyle(
+                      color: AppColors.primaryColor,
+                    ),
+                    decoration: const InputDecoration(
+                      border: OutlineInputBorder(),
+                      labelText: 'PinCode',
+                      labelStyle: TextStyle(color: AppColors.primaryColor),
+                    ),
+                  ),
+                ),
+                Container(
+                    width: double.infinity,
+                    decoration: const BoxDecoration(
+                        gradient:AppColors.buttonGradient),
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        // foregroundColor:
+                          backgroundColor: Colors.transparent,
+                          elevation: 0 // Text color
+                      ),
+                      onPressed: () {
+                        setState(() {
+
+                        if(dataValidation()){
+                        registerFarmer();
+
+                        }
+                        });
+
+                        },
+
+                      child: const Text("Submit",style: TextStyle(fontSize: 18),)
+                    )
+                 ),
+
+              ],
+            ),
+          ),
+          if (_isLoading)
+            Positioned.fill(
+              child: Container(
+                color: Colors.black.withOpacity(0.5),
+                child: const Center(
+                  child: CircularProgressIndicator(
+                    color: AppColors.primaryColor,
+                  ),
                 ),
               ),
             ),
-            Container(
-                width: double.infinity,
-                decoration: const BoxDecoration(
-                    gradient:AppColors.buttonGradient),
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    // foregroundColor:
-                      backgroundColor: Colors.transparent,
-                      elevation: 0 // Text color
-                  ),
-                  onPressed: () {
-                    setState(() {
-
-                    if(dataValidation()){
-
-                      flag=true;
-                      Future.delayed(const Duration(seconds: 2),(){
-                        setState(() {
-                          flag=false;
-                          Navigator.push(context, MaterialPageRoute(builder: (context)=>const FarmerHomeScreen()));
-                        });
-                      });
-                    }
-                    });
-
-                    },
-
-                  child: const Text("Submit",style: TextStyle(fontSize: 18),)
-                )
-             ),
-            Container(
-              child:flag? const CircularProgressIndicator(
-
-              ):const Text(''),
-            )
-          ],
-        ),
+        ],
       ),
     );
   }

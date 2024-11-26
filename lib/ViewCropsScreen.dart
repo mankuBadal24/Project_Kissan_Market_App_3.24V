@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:kissan_market_app/CustomWidgets/CustomWidgets.dart';
 import 'package:kissan_market_app/Providers/CropUpdateNotifier.dart';
+import 'package:kissan_market_app/SaveUserData/SaveUserData.dart';
 import 'package:kissan_market_app/Theme/AppColors.dart';
 import 'package:kissan_market_app/UpdateCropScreen.dart';
 import 'package:quickalert/widgets/quickalert_dialog.dart';
@@ -10,7 +11,8 @@ import 'package:http/http.dart' as http;
 import 'Api/ApiURL.dart';
 import 'package:provider/provider.dart';
 class ViewCropsScreen extends StatefulWidget{
- const ViewCropsScreen({super.key});
+  SaveUserData saveUserData=SaveUserData();
+ ViewCropsScreen({super.key,required this.saveUserData});
  @override
   State<ViewCropsScreen>createState()=>_ViewCropsScreenState();
 }
@@ -33,7 +35,7 @@ class _ViewCropsScreenState extends State<ViewCropsScreen> {
         'Content-Type': 'application/json', // Set to JSON
       },
       body: jsonEncode({
-        "farmerId":"1"
+        "farmerId":widget.saveUserData.getUserId().toString()
       }),
     );
 
@@ -187,6 +189,7 @@ class _ViewCropsScreenState extends State<ViewCropsScreen> {
                                             .toString(),
                                         cropId: cropData[index]['id']
                                             .toString(),
+                                        saveUserData: widget.saveUserData,
                                       )
                                   ));
                             },

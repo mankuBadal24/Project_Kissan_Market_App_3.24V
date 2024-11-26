@@ -4,13 +4,15 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:kissan_market_app/Api/ApiURL.dart';
 import 'package:kissan_market_app/CustomWidgets/CustomWidgets.dart';
+import 'package:kissan_market_app/SaveUserData/SaveUserData.dart';
 import 'package:kissan_market_app/Theme/AppColors.dart';
 import 'package:quickalert/widgets/quickalert_dialog.dart';
 import 'package:quickalert/models/quickalert_type.dart';
 import 'package:kissan_market_app/json_data_classes/TypeOfCropData.dart';
 
 class AddCropScreen extends StatefulWidget{
-  const AddCropScreen({super.key});
+  SaveUserData saveUserData=SaveUserData();
+   AddCropScreen({super.key,required this.saveUserData});
   @override
   State<AddCropScreen>createState()=>_AddCropScreenState();
 }
@@ -94,7 +96,7 @@ typeOfCropCodeSelected(){
           'name': nameOfCropCtrl.text,
            'type': selectedCropDesc,
           'quantity': quantityOfCropCtrl.text,
-          'farmerId':'1',
+          'farmerId':widget.saveUserData.getUserId(),
           'cropCode':selectedCropCode,
           "price":priceOfCropCtrl.text
         }),
