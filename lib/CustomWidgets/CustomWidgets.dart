@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../Theme/AppColors.dart';
-
+import 'package:rflutter_alert/rflutter_alert.dart';
 class CustomWidgets{
   ///textNormal
   static textNormal(String text){
@@ -64,5 +64,35 @@ class CustomWidgets{
   //     closeIconColor: AppColors.secondaryColor,
   //   ));
   // }
+
+  showQuickAlert(String message ,String type,BuildContext context){
+    AlertType _type=AlertType.error;
+    if(type=='success'){
+    _type =AlertType.success;
+
+    }
+    else if(type=='warning'){
+      _type=AlertType.warning;
+    }
+    else if(type=='error'){
+      _type=AlertType.error;
+    }
+
+    Alert(context: context,
+        title: message,
+        type: _type,
+        buttons: [
+          DialogButton(child: CustomWidgets.textNormal('Okay'),
+              color: AppColors.primaryColor,
+              onPressed: (){
+                Navigator.of(context).pop();
+              })
+        ]
+    ).show();
+    Future.delayed(const Duration(seconds: 3), () {
+      Navigator.of(context).pop(); // Close the alert after 3 seconds
+    });
+
+  }
 
 }

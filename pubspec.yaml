@@ -50,6 +50,7 @@ dev_dependencies:
   quickalert: ^1.1.0
   provider: ^6.1.2
   shared_preferences: ^2.3.3
+  rflutter_alert: ^2.0.7
 
 
 
@@ -98,3 +99,12 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/to/font-from-package
+flutter_icons:
+  android: true
+  ios: true
+  image_path: "assets/images/app-icon.jpg"
+  adaptive_icon_background: "#FFFFFFF"
+  adaptive_icon_foreground: "assets/images/app-icon.jpg"
+  remove_alpha_ios: true
+
+

@@ -12,6 +12,7 @@ class AppColors{
   static const Color snackBarTextColor=Color.fromRGBO(50, 137, 255, 1.0);
   static const Color borderColor=Color(0xFF706C6C);
   static const Color boxShadowColor=  Color.fromRGBO(90, 93, 193, 0.2);
+  static const Color listTileColor=Color(0xC5B1DAFA);
 
   static const LinearGradient buttonGradient= LinearGradient(
       colors: [  Color.fromRGBO(50, 137, 255, 1.0),Color.fromRGBO(52, 147, 244, 0.6),]);

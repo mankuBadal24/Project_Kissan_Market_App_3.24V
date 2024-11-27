@@ -3,13 +3,15 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:kissan_market_app/AppDrawerMenuScreen.dart';
 import 'package:kissan_market_app/CustomWidgets/CustomWidgets.dart';
+import 'package:kissan_market_app/SaveUserData/SaveUserData.dart';
 import 'package:kissan_market_app/Theme/AppColors.dart';
 import 'package:http/http.dart' as http;
 
 import 'Api/ApiURL.dart';
 
 class BuyerHomeScreen extends StatefulWidget{
- const BuyerHomeScreen({super.key});
+  SaveUserData saveUserData=SaveUserData();
+ BuyerHomeScreen({super.key,required this.saveUserData});
  @override
  State<BuyerHomeScreen>createState()=>_BuyerHomeScreenState();
 }
@@ -77,7 +79,7 @@ class _BuyerHomeScreenState extends State<BuyerHomeScreen>{
   Widget build(BuildContext context){
     return Scaffold(
       appBar: CustomWidgets.appBar("Buyer Home Screen"),
-      drawer: const AppDrawerMenuScreen(),
+      drawer:  AppDrawerMenuScreen(saveUserData:widget.saveUserData,),
       body: Stack(
         children: [
           Column(
@@ -193,7 +195,7 @@ class _BuyerHomeScreenState extends State<BuyerHomeScreen>{
                           int count = index;
 
                           return Card(
-                            color: const Color(0xFF9BB1FA),
+                            color: AppColors.listTileColor,
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(15),
                                 side: const BorderSide(

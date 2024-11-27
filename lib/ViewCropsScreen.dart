@@ -1,12 +1,11 @@
 import 'dart:convert';
+import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:flutter/material.dart';
 import 'package:kissan_market_app/CustomWidgets/CustomWidgets.dart';
 import 'package:kissan_market_app/Providers/CropUpdateNotifier.dart';
 import 'package:kissan_market_app/SaveUserData/SaveUserData.dart';
 import 'package:kissan_market_app/Theme/AppColors.dart';
 import 'package:kissan_market_app/UpdateCropScreen.dart';
-import 'package:quickalert/widgets/quickalert_dialog.dart';
-import 'package:quickalert/models/quickalert_type.dart';
 import 'package:http/http.dart' as http;
 import 'Api/ApiURL.dart';
 import 'package:provider/provider.dart';
@@ -49,29 +48,50 @@ class _ViewCropsScreenState extends State<ViewCropsScreen> {
         }
       }
       else{
-        QuickAlert.show(
-          context: context,
-          type: QuickAlertType.error,
-          text: 'Server Unreachable...',
-          // autoCloseDuration: const Duration(seconds: 2)
-        );
+       showQuickAlert('Data Fetch Error', 'error');
 
       }
 
     }
     catch(e){
       print("catch is running ");
-      QuickAlert.show(
-        context: context,
-        type: QuickAlertType.error,
-        text: "Some Exception Occurred....$e",
-        // autoCloseDuration: const Duration(seconds: 2)
-      );
+     showQuickAlert('Some Exception Occurred $e','error');
       // showSuccesAlert("Some Exception Running");
     }
     setState(() {
       _isLoading=false;
     });
+  }
+
+
+  showQuickAlert(String message ,String type){
+    AlertType _type=AlertType.error;
+    if(type=='success'){
+      _type =AlertType.success;
+
+    }
+    else if(type=='warning'){
+      _type=AlertType.warning;
+    }
+    else if(type=='error'){
+      _type=AlertType.error;
+    }
+
+    Alert(context: context,
+        title: message,
+        type: _type,
+        buttons: [
+          DialogButton(child: CustomWidgets.textNormal('Okay'),
+              color: AppColors.primaryColor,
+              onPressed: (){
+                Navigator.of(context).pop();
+              })
+        ]
+    ).show();
+    Future.delayed(const Duration(seconds: 1), () {
+      Navigator.of(context).pop(); // Close the alert after 3 seconds
+    });
+
   }
 
 
@@ -99,36 +119,20 @@ class _ViewCropsScreenState extends State<ViewCropsScreen> {
       if(response!=null){
         print("statis code-----------------${response.statusCode}");
         if(response.statusCode==200){
-          QuickAlert.show(
-            context: context,
-            type: QuickAlertType.success,
-            text: 'Crop deleted successfully',
-          );
+         showQuickAlert("Crop deleted successfully", "success");
           setState(() {
             viewCrops();
           });
         }
       }
       else{
-        QuickAlert.show(
-          context: context,
-          type: QuickAlertType.error,
-          text: 'Server Unreachable...',
-          // autoCloseDuration: const Duration(seconds: 2)
-        );
+      showQuickAlert("Server Unreachable...", "warning");
 
       }
 
     }
     catch(e){
-      print("catch is running ");
-      QuickAlert.show(
-        context: context,
-        type: QuickAlertType.error,
-        text: "Some Exception Occurred....$e",
-        // autoCloseDuration: const Duration(seconds: 2)
-      );
-      // showSuccesAlert("Some Exception Running");
+     showQuickAlert("Some Exception Occurred", "error");
     }
     finally{
 
@@ -164,7 +168,7 @@ class _ViewCropsScreenState extends State<ViewCropsScreen> {
                       itemBuilder: (context, index) {
                         int count = index;
                         return Card(
-                          color: const Color(0xC5D0F1C0),
+                          color: AppColors.listTileColor,
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(15),
                               side: const BorderSide(

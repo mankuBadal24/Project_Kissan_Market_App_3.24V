@@ -1,4 +1,4 @@
-
+import 'package:rflutter_alert/rflutter_alert.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
@@ -6,8 +6,6 @@ import 'package:kissan_market_app/Api/ApiURL.dart';
 import 'package:kissan_market_app/CustomWidgets/CustomWidgets.dart';
 import 'package:kissan_market_app/SaveUserData/SaveUserData.dart';
 import 'package:kissan_market_app/Theme/AppColors.dart';
-import 'package:quickalert/widgets/quickalert_dialog.dart';
-import 'package:quickalert/models/quickalert_type.dart';
 import 'package:kissan_market_app/json_data_classes/TypeOfCropData.dart';
 
 class AddCropScreen extends StatefulWidget{
@@ -111,45 +109,55 @@ typeOfCropCodeSelected(){
           var responseMsg = response.body;
           if (responseMsg== "Crop added successfully") {
             textFieldClear();
-            QuickAlert.show(
-              context: context,
-              type: QuickAlertType.success,
-              text: "Crop added successfully",
-              autoCloseDuration: const Duration(seconds: 1),
-            );
+            showQuickAlert("Crop added successfully","success");
 
           } else {
-            QuickAlert.show(
-                context: context,
-                type: QuickAlertType.warning,
-                text: 'Some Error Occurred....',
-                autoCloseDuration: const Duration(seconds: 1));
+            showQuickAlert(response.statusCode,"warning");
           }
         }
       }
       else{
-        QuickAlert.show(
-          context: context,
-          type: QuickAlertType.error,
-          text: 'Server Unreachable...',
-          // autoCloseDuration: const Duration(seconds: 2)
-        );
+        showQuickAlert("Some Error Occurred","warning");
 
       }
 
     }
     catch(e){
       print("catch is running ");
-      QuickAlert.show(
-          context: context,
-          type: QuickAlertType.error,
-          text: "Some Exception Occurred....$e",
-          // autoCloseDuration: const Duration(seconds: 2)
-      );
-      // showSuccesAlert("Some Exception Running");
+      showQuickAlert("Some Exception Occurred","error");
     }
     setState(() {
       _isLoading=false;
+    });
+
+  }
+
+  showQuickAlert(String message ,String type){
+    AlertType _type=AlertType.error;
+    if(type=='success'){
+      _type =AlertType.success;
+
+    }
+    else if(type=='warning'){
+      _type=AlertType.warning;
+    }
+    else if(type=='error'){
+      _type=AlertType.error;
+    }
+
+    Alert(context: context,
+        title: message,
+        type: _type,
+        buttons: [
+          DialogButton(child: CustomWidgets.textNormal('Okay'),
+              color: AppColors.primaryColor,
+              onPressed: (){
+                Navigator.of(context).pop();
+              })
+        ]
+    ).show();
+    Future.delayed(const Duration(seconds: 1), () {
+      Navigator.of(context).pop(); // Close the alert after 3 seconds
     });
 
   }

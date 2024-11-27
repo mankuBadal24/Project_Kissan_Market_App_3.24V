@@ -5,9 +5,8 @@ import 'package:kissan_market_app/CustomWidgets/CustomWidgets.dart';
 import 'package:kissan_market_app/SaveUserData/SaveUserData.dart';
 import 'package:kissan_market_app/Theme/AppColors.dart';
 import 'package:kissan_market_app/ViewCropsScreen.dart';
-import 'package:quickalert/widgets/quickalert_dialog.dart';
-import 'package:quickalert/models/quickalert_type.dart';
 import 'Api/ApiURL.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
 class UpdateCropScreen extends StatefulWidget{
   final String cropCode;
   final String name;
@@ -121,28 +120,33 @@ class _UpdateCropScreenState extends State<UpdateCropScreen> {
   }
 
   showQuickAlert(String message ,String type){
+    AlertType _type=AlertType.error;
     if(type=='success'){
-      QuickAlert.show(
-        context: context,
-        type: QuickAlertType.success,
-        text: message,
-        autoCloseDuration: const Duration(seconds: 1),
-      );
-    }
-    else if(type=='error'){
-      QuickAlert.show(
-        context: context,
-        type: QuickAlertType.error,
-        text: message,
-      );
+      _type =AlertType.success;
+
     }
     else if(type=='warning'){
-      QuickAlert.show(
-        context: context,
-        type: QuickAlertType.warning,
-        text: message,
-      );
+      _type=AlertType.warning;
     }
+    else if(type=='error'){
+      _type=AlertType.error;
+    }
+
+    Alert(context: context,
+        title: message,
+        type: _type,
+        buttons: [
+          DialogButton(child: CustomWidgets.textNormal('Okay'),
+              color: AppColors.primaryColor,
+              onPressed: (){
+                Navigator.of(context).pop();
+              })
+        ]
+    ).show();
+    Future.delayed(const Duration(seconds: 1), () {
+      Navigator.of(context).pop(); // Close the alert after 3 seconds
+    });
+
   }
 
   void textFieldClear() {

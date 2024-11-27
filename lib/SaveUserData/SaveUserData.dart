@@ -5,6 +5,7 @@ class SaveUserData {
   late String _userId;
   late String _typeOfUser;
   late String _name;
+  late String _phoneNumber;
 
   saveUserId(String userId){
     _userId=userId;
@@ -15,6 +16,9 @@ class SaveUserData {
   saveName(String name){
     _name=name;
   }
+  savePhoneNumber(String number){
+    _phoneNumber=number;
+  }
 
   String getName(){
     return _name;
@@ -24,6 +28,9 @@ class SaveUserData {
   }
   String getTypeOfUser(){
     return _typeOfUser;
+  }
+  String getPhoneNumber(){
+    return _phoneNumber;
   }
 
 }

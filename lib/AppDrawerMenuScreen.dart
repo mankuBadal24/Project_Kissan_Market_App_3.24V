@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:kissan_market_app/LoginScreen.dart';
+import 'package:kissan_market_app/SaveUserData/SaveUserData.dart';
 
 import 'Theme/AppColors.dart';
 
 class AppDrawerMenuScreen extends StatefulWidget{
-  const AppDrawerMenuScreen({super.key});
+  SaveUserData saveUserData=SaveUserData();
+  AppDrawerMenuScreen({super.key,required this.saveUserData});
   @override
   State<AppDrawerMenuScreen> createState()=>App_DrawerMenuScreenState();
 
@@ -35,15 +37,15 @@ class App_DrawerMenuScreenState extends State<AppDrawerMenuScreen>{
                     const SizedBox(height: 65,),
                     Container(
                       margin: const EdgeInsets.fromLTRB(10, 8, 0, 5),
-                      child: const Text('Profile Name',
+                      child:  Text(widget.saveUserData.getName(),
                         style:TextStyle(fontSize: 16,color:AppColors.textColorWhite)
                       ),
                     ),
                     Container(
                       margin: const EdgeInsets.fromLTRB(10, 0, 0, 10),
-                      child: const Text(
-                        '+91'+'9711604071',
-                        style: TextStyle(
+                      child:  Text(
+                        '+91${widget.saveUserData.getPhoneNumber()}',
+                        style: const TextStyle(
                           fontSize: 14,
                           color: AppColors.textColorWhite,
                         ),

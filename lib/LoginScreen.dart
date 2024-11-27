@@ -4,13 +4,11 @@ import 'package:kissan_market_app/Api/ApiURL.dart';
 import 'package:kissan_market_app/BuyerHomeScreen.dart';
 import 'package:kissan_market_app/Providers/UserUpdateNotifier.dart';
 import 'package:kissan_market_app/SaveUserData/SaveUserData.dart';
-import 'package:quickalert/widgets/quickalert_dialog.dart';
-import 'package:quickalert/models/quickalert_type.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 import 'package:kissan_market_app/FarmerHomeScreen.dart';
-
+import 'package:rflutter_alert/rflutter_alert.dart';
 import 'CustomWidgets/CustomWidgets.dart';
 import 'FarmerRegistrationScreen.dart';
 import 'SharedPreferences/UserSharedPreferences.dart';
@@ -75,9 +73,9 @@ class _LoginScreenState extends State<LoginScreen> {
       if (responseCode==200||responseCode==201) {
         showQuickAlert('Login Successful','success');
         saveUserData.saveUserId(responseMsg['userId'].toString());
-        print(saveUserData.getUserId());
         saveUserData.saveTypeOfUser(typeOfUser);
         saveUserData.saveName(nameCtrl.text.toString());
+        saveUserData.savePhoneNumber(phoneCtrl.text.toString());
         textFieldClear();
         showQuickAlert("User Registered Successfully", 'success');
           await Future.delayed(const Duration(seconds: 1));
@@ -87,18 +85,17 @@ class _LoginScreenState extends State<LoginScreen> {
          }
          else if(typeOfUser=='BR'){
            Future.delayed(const Duration(seconds: 1));
-           Navigator.push(context, MaterialPageRoute(builder: (context)=>const BuyerHomeScreen()),);
+           Navigator.push(context, MaterialPageRoute(builder: (context)=> BuyerHomeScreen(saveUserData: saveUserData,)),);
          }
 
 
 
       } else {
-        showQuickAlert("Some Error Occurred....","warning" );
+        showQuickAlert("Number Already exist or some Technical issue","warning" );
       }
     } catch (e, stackTrace) {
       print("catch is running ${stackTrace}");
       print("catch is running $e");
-      showSnackBarMessage("Some Exception Occurred....$e");
       showQuickAlert("Some Exception Occurred....", "error");
     }
     finally{
@@ -129,30 +126,28 @@ class _LoginScreenState extends State<LoginScreen> {
     });
     try{
     const  timeoutDuration= Duration(seconds: 5);
-    final Map<String, dynamic> params = {
-      'phoneNumber': int.parse(phoneCtrl.text),
-      'password': passwordCtrl.text,
-    };
     String uri = '${URL}api/login';
-    print(uri);
     final loginRequest =  http.post(
       Uri.parse(uri),
       headers: {
         'Content-Type': 'application/json', // Set to JSON
       },
       body: jsonEncode(
-          {'phoneNumber': phoneCtrl.text, 'password': passwordCtrl.text}),
+          {'phoneNumber': phoneCtrl.text.toString(), 'password': passwordCtrl.text.toString()}),
     );
 
     final response= await Future.any([loginRequest,Future.delayed(timeoutDuration)]);
 
       if(response!=null){
+        print(response.statusCode);
         if(response.statusCode==200){
           var responseMsg = jsonDecode(response.body);
           print(responseMsg);
-          saveUserData.saveUserId(responseMsg['id'].toString());
+          saveUserData.saveUserId(responseMsg['userId'].toString());
           saveUserData.saveTypeOfUser(responseMsg['role']);
           saveUserData.saveName(responseMsg['name']);
+          saveUserData.savePhoneNumber(phoneCtrl.text.toString());
+          showQuickAlert('User Login Successfully','success');
             textFieldClear();
           if(responseMsg['role']=='FR'){
             Future.delayed(const Duration(seconds: 1), () {
@@ -163,29 +158,26 @@ class _LoginScreenState extends State<LoginScreen> {
           else if(responseMsg['role']=='BR'){
             Future.delayed(const Duration(seconds: 1), () {
               Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => const BuyerHomeScreen()));
+                  MaterialPageRoute(builder: (context) =>  BuyerHomeScreen(saveUserData: saveUserData,)));
             });
           }
 
 
         }
         else{
-         showQuickAlert(response.statusCode,'warning');
+         showQuickAlert('User Not Found or Wrong Credentials','warning');
         }
       }
       else{
         showQuickAlert('Server Unreachable...','error');
+
       }
 
     }
     catch(e){
 
       print("catch is running ");
-      QuickAlert.show(
-          context: context,
-          type: QuickAlertType.error,
-          text: "Some Exception Occurred....",
-      );
+      showQuickAlert('Some Exception occurred..$e','error');
     }
     finally{
       setState(() {
@@ -196,28 +188,33 @@ class _LoginScreenState extends State<LoginScreen> {
 
   }
   showQuickAlert(String message ,String type){
+    AlertType _type=AlertType.error;
     if(type=='success'){
-      QuickAlert.show(
-        context: context,
-        type: QuickAlertType.success,
-        text: message,
-        autoCloseDuration: const Duration(seconds: 1),
-      );
-    }
-    else if(type=='error'){
-      QuickAlert.show(
-        context: context,
-        type: QuickAlertType.error,
-        text: message,
-      );
+      _type =AlertType.success;
+
     }
     else if(type=='warning'){
-      QuickAlert.show(
-        context: context,
-        type: QuickAlertType.warning,
-        text: message,
-      );
+      _type=AlertType.warning;
     }
+    else if(type=='error'){
+      _type=AlertType.error;
+    }
+
+    Alert(context: context,
+        title: message,
+        type: _type,
+        buttons: [
+          DialogButton(child: CustomWidgets.textNormal('Okay'),
+              color: AppColors.primaryColor,
+              onPressed: (){
+                Navigator.of(context).pop();
+              })
+        ]
+    ).show();
+    Future.delayed(const Duration(seconds: 1), () {
+      Navigator.of(context).pop(); // Close the alert after 3 seconds
+    });
+
   }
 
   bool registerDataValidation(){

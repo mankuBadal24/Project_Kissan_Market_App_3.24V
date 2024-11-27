@@ -1,4 +1,4 @@
-
+import 'package:rflutter_alert/rflutter_alert.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
@@ -11,8 +11,7 @@ import 'Api/ApiURL.dart';
 import 'SaveUserData/SaveUserData.dart';
 import 'SharedPreferences/UserSharedPreferences.dart';
 import 'json_data_classes/TypeOfFarmer.dart';
-import 'package:quickalert/widgets/quickalert_dialog.dart';
-import 'package:quickalert/models/quickalert_type.dart';
+
 
 class FarmerRegistrationScreen extends StatefulWidget {
   SaveUserData saveUserData=SaveUserData();
@@ -209,30 +208,37 @@ class _FarmerRegistrationState extends State<FarmerRegistrationScreen> {
       }
     }
   }
+
   showQuickAlert(String message ,String type){
+    AlertType _type=AlertType.error;
     if(type=='success'){
-      QuickAlert.show(
-        context: context,
-        type: QuickAlertType.success,
-        text: message,
-        autoCloseDuration: const Duration(seconds: 1),
-      );
-    }
-    else if(type=='error'){
-      QuickAlert.show(
-        context: context,
-        type: QuickAlertType.error,
-        text: message,
-      );
+      _type =AlertType.success;
+
     }
     else if(type=='warning'){
-      QuickAlert.show(
-        context: context,
-        type: QuickAlertType.warning,
-        text: message,
-      );
+      _type=AlertType.warning;
     }
+    else if(type=='error'){
+      _type=AlertType.error;
+    }
+
+    Alert(context: context,
+        title: message,
+        type: _type,
+        buttons: [
+          DialogButton(child: CustomWidgets.textNormal('Okay'),
+              color: AppColors.primaryColor,
+              onPressed: (){
+                Navigator.of(context).pop();
+              })
+        ]
+    ).show();
+    Future.delayed(const Duration(seconds: 1), () {
+      Navigator.of(context).pop(); // Close the alert after 3 seconds
+    });
+
   }
+
 
   //
   //
