@@ -133,6 +133,26 @@ typeOfCropCodeSelected(){
    }
 
   }
+  bool dataValidation(){
+  if(nameOfCropCtrl.text.isEmpty||quantityOfCropCtrl.text.isEmpty||priceOfCropCtrl.text.isEmpty){
+    showSnackBarMessage("fill All the fields");
+    return false;
+  }
+  else if(selectedCropDesc == null){
+    showSnackBarMessage("select all the fields");
+    return false;
+  }
+  else if(selectedCropDesc=='Pulses'){
+    if(selectedPulseCode==null){
+      showSnackBarMessage("select all the fields");
+      return false;
+    }
+    return true;
+  }
+  else{
+    return true;
+  }
+  }
 
   showQuickAlert(String message ,String type){
     AlertType _type=AlertType.error;
@@ -254,7 +274,10 @@ typeOfCropCodeSelected(){
                         elevation: 0 // Text color
                     ),
                     onPressed: () {
-                      addCrops();
+                      if(dataValidation()){
+                        addCrops();
+                      }
+
                     },
                     child: CustomWidgets.textNormal("Add Crop"),
                 ),

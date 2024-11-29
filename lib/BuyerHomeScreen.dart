@@ -217,9 +217,9 @@ class _BuyerHomeScreenState extends State<BuyerHomeScreen>{
                                 Icon(Icons.grass)
                               ],),
                               title: Text(
-                                  "Crop Name : ${cropData[index]['name']}\n Price : ${cropData[index]['price']}\n"),
+                                  "Crop Name : ${cropData[index]['name']}\nPrice : ${cropData[index]['price']} Rupees/Ton  ${cropData[index]['farmerId']}"),
                               subtitle: Text(
-                                  "Quantity : ${cropData[index]['quantity']} \t\t Farmer name:${cropData[index]['farmerName']}"),
+                                  "Quantity : ${cropData[index]['quantity']} Ton \t\nFarmer name:${cropData[index]['farmerName']}"),
                               trailing: IconButton(onPressed: () {
                               }, icon: const Icon(Icons.remove_red_eye)),
 

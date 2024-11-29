@@ -107,6 +107,11 @@ class _FarmerRegistrationState extends State<FarmerRegistrationScreen> {
           'Select all the fields!...');
       return false;
     }
+    else if(pinCodeCtrl.text.length<6){
+      showSnackBarMessage(
+          'Pincode must be of 6 digits!...');
+      return false;
+    }
     else{
       return true;
     }
@@ -190,7 +195,7 @@ class _FarmerRegistrationState extends State<FarmerRegistrationScreen> {
          await Future.delayed(const Duration(seconds: 1));
          Navigator.pushReplacement(context,MaterialPageRoute(builder: (context)=> FarmerHomeScreen(saveUserData: widget.saveUserData,)));
         } else {
-          showQuickAlert(response.statusCode, 'warning');
+          showQuickAlert(response.statusCode.toString(), 'warning');
         }
       } else {
         showQuickAlert('Server Unreachable...', 'warning');

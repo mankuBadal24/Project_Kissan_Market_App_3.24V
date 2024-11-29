@@ -169,7 +169,7 @@ class FarmerDetailsScreenState extends State<FarmerDetailsScreen> {
                                       height: 180,
                                       width: 500,
                                       child:  Padding(
-                                        padding: const EdgeInsets.all(8.0),
+                                        padding: const EdgeInsets.all(5.0),
                                         child: Column(
                                           children: [
 
@@ -178,7 +178,7 @@ class FarmerDetailsScreenState extends State<FarmerDetailsScreen> {
                                                 Expanded(
                                                   child: Container(
                                                     // height: 20,
-                                                      margin: EdgeInsets.fromLTRB(5, 3, 0, 0),
+                                                      margin: EdgeInsets.zero,
                                                       child: Text(
                                                         'Type Of Farmer:',
                                                         textAlign: TextAlign.left,
@@ -200,7 +200,7 @@ class FarmerDetailsScreenState extends State<FarmerDetailsScreen> {
                                                 Expanded(
                                                   child: Container(
                                                     // height: 12,
-                                                      margin: EdgeInsets.fromLTRB(5, 3, 0, 0),
+                                                      margin: EdgeInsets.zero,
                                                       child: Text(
                                                         'State:',
                                                         textAlign: TextAlign.left,
@@ -222,7 +222,7 @@ class FarmerDetailsScreenState extends State<FarmerDetailsScreen> {
                                                 Expanded(
                                                   child: Container(
                                                     // height: 12,
-                                                      margin: EdgeInsets.fromLTRB(5, 3, 0, 0),
+                                                      margin: EdgeInsets.zero,
                                                       child: Text(
                                                         'City:',
                                                         textAlign: TextAlign.left,
@@ -244,7 +244,7 @@ class FarmerDetailsScreenState extends State<FarmerDetailsScreen> {
                                                 Expanded(
                                                   child: Container(
                                                     // height: 12,
-                                                      margin: EdgeInsets.fromLTRB(5, 3, 0, 0),
+                                                      margin: EdgeInsets.zero,
                                                       child: Text(
                                                         'Area:',
                                                         textAlign: TextAlign.left,
@@ -261,27 +261,27 @@ class FarmerDetailsScreenState extends State<FarmerDetailsScreen> {
                                               ],
                                             ),
                                             Divider(color: Colors.grey),
-                                            // Row(
-                                            //   children: <Widget>[
-                                            //     Expanded(
-                                            //       child: Container(
-                                            //         // height: 12,
-                                            //           margin: EdgeInsets.fromLTRB(5, 3, 0, 0),
-                                            //           child: Text(
-                                            //             'Pincode:',
-                                            //             textAlign: TextAlign.left,
-                                            //             style: TextStyle(
-                                            //                 fontSize: 12,
-                                            //                 fontWeight: FontWeight.bold,
-                                            //                 color: Colors.grey[600]),
-                                            //           )),
-                                            //     ),
-                                            //     Expanded(
-                                            //       child: Text(farmerDetails['pincode'],
-                                            //           textAlign: TextAlign.right, style: TextStyle(fontSize: 12)),
-                                            //     ),
-                                            //   ],
-                                            // ),
+                                            Row(
+                                              children: <Widget>[
+                                                Expanded(
+                                                  child: Container(
+                                                    // height: 12,
+                                                      margin: EdgeInsets.zero,
+                                                      child: Text(
+                                                        'Pincode:',
+                                                        textAlign: TextAlign.left,
+                                                        style: TextStyle(
+                                                            fontSize: 12,
+                                                            fontWeight: FontWeight.bold,
+                                                            color: Colors.grey[600]),
+                                                      )),
+                                                ),
+                                                Expanded(
+                                                  child: Text(farmerDetails['pincode'],
+                                                      textAlign: TextAlign.right, style: TextStyle(fontSize: 12)),
+                                                ),
+                                              ],
+                                            ),
                                             Divider(color: Colors.grey),
 
                                           ],
@@ -328,9 +328,9 @@ class FarmerDetailsScreenState extends State<FarmerDetailsScreen> {
                                     const Icon(Icons.grass)
                                   ],),
                                   title: Text(
-                                      "Crop Name : ${cropData[index]['name']}\n Price : ${cropData[index]['price']}\n"),
+                                      "Crop Name : ${cropData[index]['name']}\nPrice : ${cropData[index]['price']}"),
                                   subtitle: Text(
-                                      "Quantity : ${cropData[index]['quantity']} \t\t Crop Code:${cropData[index]['cropCode']} \t\t Crop type :${cropData[index]['type']}"),
+                                      "Quantity : ${cropData[index]['quantity']}  \t\nCrop type :${cropData[index]['type']}"),
 
 
                                 ),
@@ -341,7 +341,6 @@ class FarmerDetailsScreenState extends State<FarmerDetailsScreen> {
                       ),
                     ],
                   );
-
           }
         },
       ),
