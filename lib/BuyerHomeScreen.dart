@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:kissan_market_app/AppDrawerMenuScreen.dart';
 import 'package:kissan_market_app/CustomWidgets/CustomWidgets.dart';
+import 'package:kissan_market_app/FarmerDetailsScreen.dart';
 import 'package:kissan_market_app/SaveUserData/SaveUserData.dart';
 import 'package:kissan_market_app/Theme/AppColors.dart';
 import 'package:http/http.dart' as http;
@@ -205,10 +206,8 @@ class _BuyerHomeScreenState extends State<BuyerHomeScreen>{
                             ),
                             child: ListTile(
                               onTap: () {
-                                // Navigator.pushReplacement(context,
-                                //     MaterialPageRoute(builder: (context) =>
-                                //
-                                //     ));
+                                Navigator.push(context,
+                                    MaterialPageRoute(builder: (context) =>FarmerDetailsScreen(farmerId: cropData[index]['farmerId'].toString())));
                               },
                               dense: true,
                               leading: Column(children: [
@@ -218,7 +217,7 @@ class _BuyerHomeScreenState extends State<BuyerHomeScreen>{
                                 Icon(Icons.grass)
                               ],),
                               title: Text(
-                                  "Crop Name : ${cropData[index]['cropName']}\n Price : ${cropData[index]['price']}\n"),
+                                  "Crop Name : ${cropData[index]['name']}\n Price : ${cropData[index]['price']}\n"),
                               subtitle: Text(
                                   "Quantity : ${cropData[index]['quantity']} \t\t Farmer name:${cropData[index]['farmerName']}"),
                               trailing: IconButton(onPressed: () {

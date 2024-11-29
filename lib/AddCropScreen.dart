@@ -126,9 +126,11 @@ typeOfCropCodeSelected(){
       print("catch is running ");
       showQuickAlert("Some Exception Occurred","error");
     }
-    setState(() {
-      _isLoading=false;
-    });
+   finally{
+     setState(() {
+       _isLoading=false;
+     });
+   }
 
   }
 

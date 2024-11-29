@@ -78,8 +78,8 @@ class _FarmerHomeScreenState extends State<FarmerHomeScreen>{
       }),
     );
 
-    final response= await Future.any([addCropRequest,Future.delayed(timeoutDuration)]);
     try{
+      final response= await Future.any([addCropRequest,Future.delayed(timeoutDuration)]);
       if(response!=null){
         if(response.statusCode==200){
           setState(() {
