@@ -6,7 +6,7 @@ import 'package:http/http.dart' as http;
 import 'package:kissan_market_app/Api/ApiURL.dart';
 import 'package:kissan_market_app/CustomWidgets/CustomWidgets.dart';
 
-import 'Theme/AppColors.dart';
+import '../Theme/AppColors.dart';
 class FarmerDetailsScreen extends StatefulWidget{
   final String farmerId;
   const FarmerDetailsScreen({super.key,required this.farmerId});
@@ -18,10 +18,8 @@ class FarmerDetailsScreenState extends State<FarmerDetailsScreen> {
   bool _isLoading=false;
   String URL= ApiURL.getURL();
   bool _isDisposed=false;
-  bool _isDataFetched=false;
   // List cropData=[];
    late Future<Map <String ,dynamic>>farmerData;
-
 
 
 
@@ -57,7 +55,6 @@ class FarmerDetailsScreenState extends State<FarmerDetailsScreen> {
         if (response.statusCode == 200) {
           futureFarmerData = jsonDecode(response.body);
           print(futureFarmerData);
-          _isDataFetched=true;
           // cropData=farmerData["crops"];
           // showQuickAlert("Data Fetched Successfully", 'success');
           // Future.delayed(const Duration(seconds: 2));
@@ -328,9 +325,9 @@ class FarmerDetailsScreenState extends State<FarmerDetailsScreen> {
                                     const Icon(Icons.grass)
                                   ],),
                                   title: Text(
-                                      "Crop Name : ${cropData[index]['name']}\nPrice : ${cropData[index]['price']}"),
+                                      "Crop Name : ${cropData[index]['name']}\nPrice : ${cropData[index]['price']}Per Quintal"),
                                   subtitle: Text(
-                                      "Quantity : ${cropData[index]['quantity']}  \t\nCrop type :${cropData[index]['type']}"),
+                                      "Quantity : ${cropData[index]['quantity']}Quintal  \t\nCrop type :${cropData[index]['type']}"),
 
 
                                 ),

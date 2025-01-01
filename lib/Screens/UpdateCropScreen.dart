@@ -2,11 +2,11 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:kissan_market_app/CustomWidgets/CustomWidgets.dart';
-import 'package:kissan_market_app/SaveUserData/SaveUserData.dart';
 import 'package:kissan_market_app/Theme/AppColors.dart';
-import 'package:kissan_market_app/ViewCropsScreen.dart';
-import 'Api/ApiURL.dart';
+import '../Api/ApiURL.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
+
+import 'ViewCropsScreen.dart';
 class UpdateCropScreen extends StatefulWidget{
   final String cropCode;
   final String name;
@@ -15,12 +15,11 @@ class UpdateCropScreen extends StatefulWidget{
   final String quantity;
   final String farmerId;
   final String cropId;
-  SaveUserData saveUserData=SaveUserData();
     UpdateCropScreen({super.key,
     required this.cropCode,required this.name,
     required this.type,required this.price,
     required this.quantity,required this.farmerId,
-     required this.cropId,required this.saveUserData
+     required this.cropId,
 });
 
   @override
@@ -183,7 +182,7 @@ class _UpdateCropScreenState extends State<UpdateCropScreen> {
 
           updateCrop();
           await Future.delayed(const Duration(seconds: 2));
-          Navigator.pushReplacement(context,MaterialPageRoute(builder:(context)=> ViewCropsScreen(saveUserData: widget.saveUserData,) ));
+          Navigator.pushReplacement(context,MaterialPageRoute(builder:(context)=> ViewCropsScreen() ));
         },
         style: ElevatedButton.styleFrom(
           backgroundColor: AppColors.buttonColor,          // Set the button color

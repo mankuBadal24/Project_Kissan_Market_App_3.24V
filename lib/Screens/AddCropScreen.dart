@@ -1,3 +1,4 @@
+import 'package:kissan_market_app/SharedPreferences/UserSharedPreferences.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
@@ -9,8 +10,7 @@ import 'package:kissan_market_app/Theme/AppColors.dart';
 import 'package:kissan_market_app/json_data_classes/TypeOfCropData.dart';
 
 class AddCropScreen extends StatefulWidget{
-  SaveUserData saveUserData=SaveUserData();
-   AddCropScreen({super.key,required this.saveUserData});
+   AddCropScreen({super.key});
   @override
   State<AddCropScreen>createState()=>_AddCropScreenState();
 }
@@ -25,8 +25,8 @@ class _AddCropScreenState extends State<AddCropScreen>{
   TextEditingController nameOfCropCtrl=TextEditingController();
   TextEditingController quantityOfCropCtrl=TextEditingController();
   TextEditingController priceOfCropCtrl=TextEditingController();
-
-
+  UserSharedPreferences pref= UserSharedPreferences();
+  Map<String,String?>userData={};
 
 
 typeOfCropCodeSelected(){
@@ -94,7 +94,7 @@ typeOfCropCodeSelected(){
           'name': nameOfCropCtrl.text,
            'type': selectedCropDesc,
           'quantity': quantityOfCropCtrl.text,
-          'farmerId':widget.saveUserData.getUserId(),
+          'farmerId':userData['userId'].toString(),
           'cropCode':selectedCropCode,
           "price":priceOfCropCtrl.text
         }),
@@ -196,12 +196,17 @@ typeOfCropCodeSelected(){
     ));
   }
 
-
+  getUserCredentials()async{
+  userData=await pref.loadUserData();
+  print(userData);
+  }
 
   @override
   void initState() {
     super.initState();
+    getUserCredentials();
     setTypeOfCropsItems();
+
   }
 
   @override

@@ -1,27 +1,31 @@
 import 'dart:convert';
+import 'package:kissan_market_app/SharedPreferences/UserSharedPreferences.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:flutter/material.dart';
 import 'package:kissan_market_app/CustomWidgets/CustomWidgets.dart';
 import 'package:kissan_market_app/Providers/CropUpdateNotifier.dart';
-import 'package:kissan_market_app/SaveUserData/SaveUserData.dart';
 import 'package:kissan_market_app/Theme/AppColors.dart';
-import 'package:kissan_market_app/UpdateCropScreen.dart';
+import 'package:kissan_market_app/Screens/UpdateCropScreen.dart';
 import 'package:http/http.dart' as http;
-import 'Api/ApiURL.dart';
 import 'package:provider/provider.dart';
+
+import '../Api/ApiURL.dart';
 class ViewCropsScreen extends StatefulWidget{
-   SaveUserData saveUserData=SaveUserData();
- ViewCropsScreen({super.key,required this.saveUserData});
+ ViewCropsScreen({super.key});
  @override
   State<ViewCropsScreen>createState()=>_ViewCropsScreenState();
 }
 class _ViewCropsScreenState extends State<ViewCropsScreen> {
+  UserSharedPreferences pref=UserSharedPreferences();
+  Map<String,String?>userData={};
   bool _isLoading=false;
   String URL =ApiURL.getURL();
   List cropData=[];
   
   
   Future viewCrops() async{
+    userData=await pref.loadUserData();
+    print('----------XXXX  ${userData['userId'].toString()}');
     setState(() {
       _isLoading=true;
     });
@@ -34,7 +38,7 @@ class _ViewCropsScreenState extends State<ViewCropsScreen> {
         'Content-Type': 'application/json', // Set to JSON
       },
       body: jsonEncode({
-        "farmerId":widget.saveUserData.getUserId().toString()
+        "farmerId":userData['userId'].toString()
       }),
     );
 
@@ -142,6 +146,7 @@ class _ViewCropsScreenState extends State<ViewCropsScreen> {
     }
   }
 
+
   @override
   void initState() {
     super.initState();
@@ -193,7 +198,7 @@ class _ViewCropsScreenState extends State<ViewCropsScreen> {
                                             .toString(),
                                         cropId: cropData[index]['id']
                                             .toString(),
-                                        saveUserData: widget.saveUserData,
+
                                       )
                                   ));
                             },

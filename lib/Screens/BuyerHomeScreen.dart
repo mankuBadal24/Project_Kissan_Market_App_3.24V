@@ -1,18 +1,17 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:kissan_market_app/AppDrawerMenuScreen.dart';
+import 'package:kissan_market_app/Screens/AppDrawerMenuScreen.dart';
 import 'package:kissan_market_app/CustomWidgets/CustomWidgets.dart';
-import 'package:kissan_market_app/FarmerDetailsScreen.dart';
+import 'package:kissan_market_app/Screens/FarmerDetailsScreen.dart';
 import 'package:kissan_market_app/SaveUserData/SaveUserData.dart';
 import 'package:kissan_market_app/Theme/AppColors.dart';
 import 'package:http/http.dart' as http;
 
-import 'Api/ApiURL.dart';
+import '../Api/ApiURL.dart';
 
 class BuyerHomeScreen extends StatefulWidget{
-  SaveUserData saveUserData=SaveUserData();
- BuyerHomeScreen({super.key,required this.saveUserData});
+ BuyerHomeScreen({super.key});
  @override
  State<BuyerHomeScreen>createState()=>_BuyerHomeScreenState();
 }
@@ -80,7 +79,7 @@ class _BuyerHomeScreenState extends State<BuyerHomeScreen>{
   Widget build(BuildContext context){
     return Scaffold(
       appBar: CustomWidgets.appBar("Buyer Home Screen"),
-      drawer:  AppDrawerMenuScreen(saveUserData:widget.saveUserData,),
+      drawer:  AppDrawerMenuScreen(),
       body: Stack(
         children: [
           Column(
@@ -217,9 +216,9 @@ class _BuyerHomeScreenState extends State<BuyerHomeScreen>{
                                 Icon(Icons.grass)
                               ],),
                               title: Text(
-                                  "Crop Name : ${cropData[index]['name']}\nPrice : ${cropData[index]['price']} Rupees/Ton  ${cropData[index]['farmerId']}"),
+                                  "Crop Name : ${cropData[index]['name']}\nPrice : ${cropData[index]['price']} Rupees Per Quintal  "),
                               subtitle: Text(
-                                  "Quantity : ${cropData[index]['quantity']} Ton \t\nFarmer name:${cropData[index]['farmerName']}"),
+                                  "Quantity : ${cropData[index]['quantity']} Quintal \t\nFarmer name:${cropData[index]['farmerName']}"),
                               trailing: IconButton(onPressed: () {
                               }, icon: const Icon(Icons.remove_red_eye)),
 

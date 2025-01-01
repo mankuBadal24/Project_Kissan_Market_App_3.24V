@@ -4,19 +4,18 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:kissan_market_app/CustomWidgets/CustomWidgets.dart';
-import 'package:kissan_market_app/FarmerHomeScreen.dart';
+import 'package:kissan_market_app/Screens/FarmerHomeScreen.dart';
 import 'package:kissan_market_app/Theme/AppColors.dart';
 import 'package:kissan_market_app/json_data_classes/IndianStateCities.dart';
-import 'Api/ApiURL.dart';
-import 'SaveUserData/SaveUserData.dart';
-import 'SharedPreferences/UserSharedPreferences.dart';
-import 'json_data_classes/TypeOfFarmer.dart';
+import '../Api/ApiURL.dart';
+import '../SaveUserData/SaveUserData.dart';
+import '../SharedPreferences/UserSharedPreferences.dart';
+import '../json_data_classes/TypeOfFarmer.dart';
 
 
 class FarmerRegistrationScreen extends StatefulWidget {
   SaveUserData saveUserData=SaveUserData();
    FarmerRegistrationScreen({super.key,required this.saveUserData});
-
   @override
   State<FarmerRegistrationScreen> createState() => _FarmerRegistrationState();
 }
@@ -27,7 +26,7 @@ class _FarmerRegistrationState extends State<FarmerRegistrationScreen> {
   String? selectedCity;
 
 
-  UserSharedPreferences userSharedPreferences=UserSharedPreferences();
+  UserSharedPreferences pref=UserSharedPreferences();
   bool _isLoading = false;
   final bool _isDisposed = false;
   String URL = ApiURL.getURL();
@@ -192,8 +191,9 @@ class _FarmerRegistrationState extends State<FarmerRegistrationScreen> {
           var responseMsg = response.body;
           // textFieldClear();
           showQuickAlert(responseMsg, 'success');
+          await pref.saveUserData(widget.saveUserData.getName(), widget.saveUserData.getUserId(),'FR' ,widget.saveUserData.getPhoneNumber());
          await Future.delayed(const Duration(seconds: 1));
-         Navigator.pushReplacement(context,MaterialPageRoute(builder: (context)=> FarmerHomeScreen(saveUserData: widget.saveUserData,)));
+         Navigator.pushReplacement(context,MaterialPageRoute(builder: (context)=> FarmerHomeScreen()));
         } else {
           showQuickAlert(response.statusCode.toString(), 'warning');
         }

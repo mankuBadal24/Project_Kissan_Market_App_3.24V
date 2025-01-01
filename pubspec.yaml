@@ -51,6 +51,7 @@ dev_dependencies:
   provider: ^6.1.2
   shared_preferences: ^2.3.3
   rflutter_alert: ^2.0.7
+  flutter_secure_storage: ^9.2.2
 
 
 
