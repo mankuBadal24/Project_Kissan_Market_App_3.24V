@@ -65,7 +65,7 @@ class CustomWidgets{
   //   ));
   // }
 
-  showQuickAlert(String message ,String type,BuildContext context){
+  static showQuickAlert(String message ,String type,BuildContext context){
     AlertType _type=AlertType.error;
     if(type=='success'){
     _type =AlertType.success;
@@ -93,6 +93,72 @@ class CustomWidgets{
       Navigator.of(context).pop(); // Close the alert after 3 seconds
     });
 
+  }
+
+ static Widget customTextRow(String field,String text){
+    return Column(
+      children: [
+        Row(
+          children: <Widget>[
+            Expanded(
+              child: Container(
+                // height: 12,
+                  margin: EdgeInsets.zero,
+                  child: Text(
+                    field,
+                    textAlign: TextAlign.left,
+                    style: TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.grey[600]),
+                  )),
+            ),
+            Expanded(
+              child: Text(text,
+                  textAlign: TextAlign.right, style:const TextStyle(fontSize: 12)),
+            ),
+
+          ],
+        ),
+        const Divider(color: Colors.grey),
+      ],
+    );
+  }
+
+  static Widget CustomeCard(String name,String phoneNumber,VoidCallback onTap){
+    return Card(
+      elevation: 5,
+      // color: Color(0xffdce9fb),
+      shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(16),
+        side: BorderSide(color: AppColors.primaryColor)
+      ),
+      child: Padding(padding: EdgeInsets.all(8.0),
+      child: Column(
+          children: [
+            Row(
+              children: [
+                Icon(Icons.person,color: AppColors.primaryColor,),
+                SizedBox(width: 8,),
+                Expanded(child:  Text("Name : ${name.toUpperCase()}",style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold),))
+
+              ],
+            ),
+            Divider(),
+            Row(
+              children: [
+                Icon(Icons.phone,color: AppColors.primaryColor,),
+                SizedBox(width: 8,),
+                Expanded(child:  Text("Phone : +91-$phoneNumber",style: TextStyle(fontSize: 16,)))
+
+              ],
+            ),
+
+
+
+        ],
+      ),),
+    );
   }
 
 }

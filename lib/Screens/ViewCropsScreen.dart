@@ -173,51 +173,83 @@ class _ViewCropsScreenState extends State<ViewCropsScreen> {
                       itemBuilder: (context, index) {
                         int count = index;
                         return Card(
-                          color: AppColors.listTileColor,
+                          // color: AppColors.listTileColor,
+                          elevation: 5,
                           shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(15),
-                              side: const BorderSide(
-                                  color: AppColors.boxShadowColor,
+                              borderRadius: BorderRadius.circular(16),
+                              side: BorderSide(
+
+                                  color: AppColors.primaryColor,
                                   width: 1
                               )
                           ),
-                          child: ListTile(
-                            onTap: () {
-                              Navigator.pushReplacement(context,
-                                  MaterialPageRoute(builder: (context) =>
-                                      UpdateCropScreen(
-                                        cropCode: cropData[index]['cropCode'],
-                                        name: cropData[index]['name'],
-                                        type: cropData[index]['type']
-                                            .toString(),
-                                        quantity: cropData[index]['quantity']
-                                            .toString(),
-                                        farmerId: cropData[index]['farmerId']
-                                            .toString(),
-                                        price: cropData[index]['price']
-                                            .toString(),
-                                        cropId: cropData[index]['id']
-                                            .toString(),
+                          child:Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Column(children: [
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(("${index + 1}").toString(),
+                                    style: const TextStyle(
+                                        fontWeight: FontWeight.bold),),
+                                Text((" Crop Details").toString(),
+                                  style: const TextStyle(
+                                      fontWeight: FontWeight.bold),),
+                                InkWell(child: Icon(Icons.edit,color:AppColors.primaryColor,),
+                                  onTap: (){
 
-                                      )
-                                  ));
-                            },
-                            dense: true,
-                            leading: Column(children: [
-                              Text((index + 1).toString(),
-                                style: const TextStyle(
-                                    fontWeight: FontWeight.bold),),
-                              Icon(Icons.grass)
+                                    Navigator.pushReplacement(context,
+                                        MaterialPageRoute(builder: (context) =>
+                                            UpdateCropScreen(
+                                              cropCode: cropData[index]['cropCode'],
+                                              name: cropData[index]['name'],
+                                              type: cropData[index]['type']
+                                                  .toString(),
+                                              quantity: cropData[index]['quantity']
+                                                  .toString(),
+                                              farmerId: cropData[index]['farmerId']
+                                                  .toString(),
+                                              price: cropData[index]['price']
+                                                  .toString(),
+                                              cropId: cropData[index]['id']
+                                                  .toString(),
+
+                                            )
+                                        ));
+                                  },),
+                              ],),
+                              Divider(),
+
+                              Row(
+                                children: [
+                                  Icon(Icons.grass,color:Colors.green ,),
+                                  SizedBox(width: 8,),
+                                  Expanded(child:  Text("Crop Name : ${cropData[index]['name']}",style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold),))
+
+                                ],
+                              ),
+                              Divider(),
+                              Row(
+                                children: [
+                                  Icon(Icons.currency_rupee,color: AppColors.primaryColor,),
+                                  SizedBox(width: 8,),
+                                  Expanded(child:  Text("Price : ${cropData[index]['price']} ₹",style: TextStyle(fontSize: 16,)))
+
+                                ],
+                              ),
+                              Divider(),
+                              Row(
+                                children: [
+                                  Icon(Icons.shopping_bag,color: AppColors.primaryColor,),
+                                  SizedBox(width: 8,),
+                                  Expanded(child:  Text("Quantity : ${cropData[index]['quantity']} ton",style: TextStyle(fontSize: 16,)))
+
+                                ],
+                              ),
+
+
                             ],),
-                            title: Text(
-                                "Crop Name : ${cropData[index]['name']}\n Price : ${cropData[index]['price']}\n"),
-                            subtitle: Text(
-                                "Quantity : ${cropData[index]['quantity']} cropId:${cropData[index]['id']}"),
-                            trailing: IconButton(onPressed: () {
-                              deleteCrops(cropData[index]['id'].toString());
-                            }, icon: const Icon(Icons.delete_outline)),
-
-                          ),
+                          )
                         );
                       }
 
@@ -242,3 +274,15 @@ class _ViewCropsScreenState extends State<ViewCropsScreen> {
     );
   }
 }
+
+
+
+
+
+
+
+
+
+
+
+

@@ -144,154 +144,150 @@ class FarmerDetailsScreenState extends State<FarmerDetailsScreen> {
             return
                   Column(
                     children: [
-                      Expanded(
-                          child: Center(
-                            child: Column(
+                      Center(
+                        child: Column(
 
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: FloatingActionButton.large(
-                                    backgroundColor: AppColors.primaryColor,
-                                    heroTag: 'Profile',
-                                    onPressed: (){
-                                    },
-                                    tooltip: 'Profile',
-                                    shape:const CircleBorder(),
-                                    child:  const Icon(Icons.person,color: AppColors.secondaryColor,size: 60,),),
-                                ),
-                                Text(wholeData['farmerName'].toUpperCase(),style:const TextStyle(fontSize: 16,fontWeight: FontWeight.bold),),
-                                Card(color: AppColors.listTileColor,
-                                    child:SizedBox(
-                                      height: 180,
-                                      width: 500,
-                                      child:  Padding(
-                                        padding: const EdgeInsets.all(5.0),
-                                        child: Column(
-                                          children: [
-
-                                            Row(
-                                              children: <Widget>[
-                                                Expanded(
-                                                  child: Container(
-                                                    // height: 20,
-                                                      margin: EdgeInsets.zero,
-                                                      child: Text(
-                                                        'Type Of Farmer:',
-                                                        textAlign: TextAlign.left,
-                                                        style: TextStyle(
-                                                            fontSize: 12,
-                                                            fontWeight: FontWeight.bold,
-                                                            color: Colors.grey[600]),
-                                                      )),
-                                                ),
-                                                Expanded(
-                                                  child: Text(farmerDetails['farmerType'],
-                                                      textAlign: TextAlign.right, style: TextStyle(fontSize: 12)),
-                                                ),
-                                              ],
-                                            ),
-                                            Divider(color: Colors.grey),
-                                            Row(
-                                              children: <Widget>[
-                                                Expanded(
-                                                  child: Container(
-                                                    // height: 12,
-                                                      margin: EdgeInsets.zero,
-                                                      child: Text(
-                                                        'State:',
-                                                        textAlign: TextAlign.left,
-                                                        style: TextStyle(
-                                                            fontSize: 12,
-                                                            fontWeight: FontWeight.bold,
-                                                            color: Colors.grey[600]),
-                                                      )),
-                                                ),
-                                                Expanded(
-                                                  child: Text(farmerDetails['state'] ,
-                                                      textAlign: TextAlign.right, style: TextStyle(fontSize: 12)),
-                                                ),
-                                              ],
-                                            ),
-                                            Divider(color: Colors.grey),
-                                            Row(
-                                              children: <Widget>[
-                                                Expanded(
-                                                  child: Container(
-                                                    // height: 12,
-                                                      margin: EdgeInsets.zero,
-                                                      child: Text(
-                                                        'City:',
-                                                        textAlign: TextAlign.left,
-                                                        style: TextStyle(
-                                                            fontSize: 12,
-                                                            fontWeight: FontWeight.bold,
-                                                            color: Colors.grey[600]),
-                                                      )),
-                                                ),
-                                                Expanded(
-                                                  child: Text(farmerDetails['city'],
-                                                      textAlign: TextAlign.right, style: TextStyle(fontSize: 12)),
-                                                ),
-                                              ],
-                                            ),
-                                            Divider(color: Colors.grey),
-                                            Row(
-                                              children: <Widget>[
-                                                Expanded(
-                                                  child: Container(
-                                                    // height: 12,
-                                                      margin: EdgeInsets.zero,
-                                                      child: Text(
-                                                        'Area:',
-                                                        textAlign: TextAlign.left,
-                                                        style: TextStyle(
-                                                            fontSize: 12,
-                                                            fontWeight: FontWeight.bold,
-                                                            color: Colors.grey[600]),
-                                                      )),
-                                                ),
-                                                Expanded(
-                                                  child: Text(farmerDetails['area'],
-                                                      textAlign: TextAlign.right, style: TextStyle(fontSize: 12)),
-                                                ),
-                                              ],
-                                            ),
-                                            Divider(color: Colors.grey),
-                                            Row(
-                                              children: <Widget>[
-                                                Expanded(
-                                                  child: Container(
-                                                    // height: 12,
-                                                      margin: EdgeInsets.zero,
-                                                      child: Text(
-                                                        'Pincode:',
-                                                        textAlign: TextAlign.left,
-                                                        style: TextStyle(
-                                                            fontSize: 12,
-                                                            fontWeight: FontWeight.bold,
-                                                            color: Colors.grey[600]),
-                                                      )),
-                                                ),
-                                                Expanded(
-                                                  child: Text(farmerDetails['pincode'],
-                                                      textAlign: TextAlign.right, style: TextStyle(fontSize: 12)),
-                                                ),
-                                              ],
-                                            ),
-                                            Divider(color: Colors.grey),
-
-                                          ],
-                                        ),
-                                      ),
-                                    )
-                                ),
-                              ],
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: FloatingActionButton.large(
+                                backgroundColor: AppColors.primaryColor,
+                                heroTag: 'Profile',
+                                onPressed: (){
+                                },
+                                tooltip: 'Profile',
+                                shape:const CircleBorder(),
+                                child:  const Icon(Icons.person,color: AppColors.secondaryColor,size: 60,),),
                             ),
-                          )
-                      ),
+                            Text(wholeData['farmerName'].toUpperCase(),style:const TextStyle(fontSize: 16,fontWeight: FontWeight.bold),),
+                            Card(
+                             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16),side: BorderSide(width: 5,color: AppColors.primaryColor)),
+                                child:Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Column(
+                                    children: [
 
-                      const Divider(height: 1,thickness: 5,color: AppColors.boxShadowColor,),
+                                      Row(
+                                        children: <Widget>[
+                                          Expanded(
+                                            child: Container(
+                                              // height: 20,
+                                                margin: EdgeInsets.zero,
+                                                child: Text(
+                                                  'Type Of Farmer:',
+                                                  textAlign: TextAlign.left,
+                                                  style: TextStyle(
+                                                      fontSize: 12,
+                                                      fontWeight: FontWeight.bold,
+                                                      color: Colors.grey[600]),
+                                                )),
+                                          ),
+                                          Expanded(
+                                            child: Text(farmerDetails['farmerType'],
+                                                textAlign: TextAlign.right, style: TextStyle(fontSize: 12)),
+                                          ),
+                                        ],
+                                      ),
+                                      Divider(color: Colors.grey),
+                                      Row(
+                                        children: <Widget>[
+                                          Expanded(
+                                            child: Container(
+                                              // height: 12,
+                                                margin: EdgeInsets.zero,
+                                                child: Text(
+                                                  'State:',
+                                                  textAlign: TextAlign.left,
+                                                  style: TextStyle(
+                                                      fontSize: 12,
+                                                      fontWeight: FontWeight.bold,
+                                                      color: Colors.grey[600]),
+                                                )),
+                                          ),
+                                          Expanded(
+                                            child: Text(farmerDetails['state'] ,
+                                                textAlign: TextAlign.right, style: TextStyle(fontSize: 12)),
+                                          ),
+                                        ],
+                                      ),
+                                      Divider(color: Colors.grey),
+                                      Row(
+                                        children: <Widget>[
+                                          Expanded(
+                                            child: Container(
+                                              // height: 12,
+                                                margin: EdgeInsets.zero,
+                                                child: Text(
+                                                  'City:',
+                                                  textAlign: TextAlign.left,
+                                                  style: TextStyle(
+                                                      fontSize: 12,
+                                                      fontWeight: FontWeight.bold,
+                                                      color: Colors.grey[600]),
+                                                )),
+                                          ),
+                                          Expanded(
+                                            child: Text(farmerDetails['city'],
+                                                textAlign: TextAlign.right, style: TextStyle(fontSize: 12)),
+                                          ),
+                                        ],
+                                      ),
+                                      Divider(color: Colors.grey),
+                                      Row(
+                                        children: <Widget>[
+                                          Expanded(
+                                            child: Container(
+                                              // height: 12,
+                                                margin: EdgeInsets.zero,
+                                                child: Text(
+                                                  'Area:',
+                                                  textAlign: TextAlign.left,
+                                                  style: TextStyle(
+                                                      fontSize: 12,
+                                                      fontWeight: FontWeight.bold,
+                                                      color: Colors.grey[600]),
+                                                )),
+                                          ),
+                                          Expanded(
+                                            child: Text(farmerDetails['area'],
+                                                textAlign: TextAlign.right, style: TextStyle(fontSize: 12)),
+                                          ),
+                                        ],
+                                      ),
+                                      Divider(color: Colors.grey),
+                                      Row(
+                                        children: <Widget>[
+                                          Expanded(
+                                            child: Container(
+                                              // height: 12,
+                                                margin: EdgeInsets.zero,
+                                                child: Text(
+                                                  'Pincode:',
+                                                  textAlign: TextAlign.left,
+                                                  style: TextStyle(
+                                                      fontSize: 12,
+                                                      fontWeight: FontWeight.bold,
+                                                      color: Colors.grey[600]),
+                                                )),
+                                          ),
+                                          Expanded(
+                                            child: Text(farmerDetails['pincode'],
+                                                textAlign: TextAlign.right, style: TextStyle(fontSize: 12)),
+                                          ),
+                                        ],
+                                      ),
+                                      Divider(color: Colors.grey),
+
+                                    ],
+                                  ),
+
+                                )
+                            ),
+                          ],
+                        ),
+                      ),
+                      SizedBox(height: 5,),
+                      const Divider(height: 1,color:Colors.green ,),
                       Text("Crop details",style: TextStyle(fontSize: 16,fontWeight:FontWeight.w500,color:Colors.grey[600]),),
                       Expanded(
                         // child: Text('hello'),
@@ -301,36 +297,70 @@ class FarmerDetailsScreenState extends State<FarmerDetailsScreen> {
                             itemBuilder: (context, index) {
                               int count = index;
 
-                              return Card(
-                                color: Color.fromRGBO(211, 248, 241, 1.0),
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(15),
-                                    side: const BorderSide(
-                                        color: AppColors.boxShadowColor,
-                                        width: 1
-                                    )
-                                ),
-                                child: ListTile(
-                                  onTap: () {
-                                    // Navigator.pushReplacement(context,
-                                    //     MaterialPageRoute(builder: (context) =>
-                                    //
-                                    //     ));
-                                  },
-                                  dense: true,
-                                  leading: Column(children: [
-                                    Text((index + 1).toString(),
-                                      style: const TextStyle(
-                                          fontWeight: FontWeight.bold),),
-                                    const Icon(Icons.grass)
-                                  ],),
-                                  title: Text(
-                                      "Crop Name : ${cropData[index]['name']}\nPrice : ${cropData[index]['price']}Per Quintal"),
-                                  subtitle: Text(
-                                      "Quantity : ${cropData[index]['quantity']}Quintal  \t\nCrop type :${cropData[index]['type']}"),
+                            return  Card(
+                                // color:const Color.fromRGBO(164, 199, 250, 1.0) ,
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(15),
+                                      side: const BorderSide(
+                                          color: AppColors.primaryColor,
+                                          width: 1
+                                      )
+                                  ),
+                                  child:Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Column(children: [
+                                      Row(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        children: [
+                                          Text(("${index + 1}").toString(),
+                                            style: const TextStyle(
+                                                fontWeight: FontWeight.bold),),
+                                          Text((" Crop Details").toString(),
+                                            style: const TextStyle(
+                                                fontWeight: FontWeight.bold),),
+
+                                        ],),
+                                      Divider(),
+
+                                      Row(
+                                        children: [
+                                          Icon(Icons.grass,color:Colors.green ,),
+                                          SizedBox(width: 8,),
+                                          Expanded(child:  Text("Crop Name : ${cropData[index]['name']}",style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold),))
+
+                                        ],
+                                      ),
+                                      Divider(),
+                                      Row(
+                                        children: [
+                                          Icon(Icons.currency_rupee,color: AppColors.primaryColor,),
+                                          SizedBox(width: 8,),
+                                          Expanded(child:  Text("Price : ${cropData[index]['price']} ₹",style: TextStyle(fontSize: 16,)))
+
+                                        ],
+                                      ),
+                                      Divider(),
+                                      Row(
+                                        children: [
+                                          Icon(Icons.shopping_bag,color: AppColors.primaryColor,),
+                                          SizedBox(width: 8,),
+                                          Expanded(child:  Text("Quantity : ${cropData[index]['quantity']} ton",style: TextStyle(fontSize: 16,)))
+
+                                        ],
+                                      ),
+                                      Divider(),
+                                      Row(
+                                        children: [
+                                          Icon(Icons.person,color: AppColors.primaryColor,),
+                                          SizedBox(width: 8,),
+                                          Expanded(child:  Text("Farmer name:${cropData[index]['farmerName']}",style: TextStyle(fontSize: 16,)))
+
+                                        ],
+                                      ),
 
 
-                                ),
+                                    ],),
+                                  )
                               );
                             }
 

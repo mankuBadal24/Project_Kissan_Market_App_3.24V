@@ -1,9 +1,11 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:kissan_market_app/CustomWidgets/CustomWidgets.dart';
 import 'package:kissan_market_app/Screens/AddCropScreen.dart';
 import 'package:kissan_market_app/Screens/AppDrawerMenuScreen.dart';
 import 'package:kissan_market_app/SaveUserData/SaveUserData.dart';
 import 'package:kissan_market_app/Screens/DriverListScreen.dart';
+import 'package:kissan_market_app/Screens/WareHouseScreen.dart';
 import 'package:kissan_market_app/SessionManagement//SessionManagement.dart';
 import 'package:http/http.dart' as http;
 import '../Api/ApiURL.dart';
@@ -203,7 +205,7 @@ class _FarmerHomeScreenState extends State<FarmerHomeScreen>{
                           padding: const EdgeInsets.all(8.0),
                           child: FloatingActionButton.large(
                             onPressed: ()async{
-
+                                Navigator.push(context, MaterialPageRoute(builder: (context)=>const WareHouseScreen()));
                             },
                             backgroundColor: AppColors.primaryColor,
                             heroTag: 'Send to WareHouse',
@@ -229,34 +231,8 @@ class _FarmerHomeScreenState extends State<FarmerHomeScreen>{
                   itemCount: farmerData.length,
                   itemBuilder: (context, index) {
                     int count = index;
-                    return Card(
-                      color:  AppColors.listTileColor,
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(15),
-                          side: const BorderSide(
-                              color: AppColors.boxShadowColor,
-                              width: 1
-                          )
-                      ),
-                      child: ListTile(
-                        onTap: () {
+                    return CustomWidgets.CustomeCard(farmerData[index]['name'],farmerData[index]['phoneNumber'] , (){});
 
-                        },
-                        dense: true,
-                        leading: Column(children: [
-                          Text((index + 1).toString(),
-                            style: const TextStyle(
-                                fontWeight: FontWeight.bold),),
-                          const Icon(Icons.person)
-                        ],),
-                        title: Text(
-                            "Buyer Name : ${farmerData[index]['name']}"),
-                        subtitle: Text(
-                            "Phone Number : ${farmerData[index]['phoneNumber']}"),
-
-
-                      ),
-                    );
                   }
 
               ),
@@ -269,3 +245,34 @@ class _FarmerHomeScreenState extends State<FarmerHomeScreen>{
 
   
 }
+
+
+//
+// Card(
+// color:  AppColors.listTileColor,
+// shape: RoundedRectangleBorder(
+// borderRadius: BorderRadius.circular(15),
+// side: const BorderSide(
+// color: AppColors.boxShadowColor,
+// width: 1
+// )
+// ),
+// child: ListTile(
+// onTap: () {
+//
+// },
+// dense: true,
+// leading: Column(children: [
+// Text((index + 1).toString(),
+// style: const TextStyle(
+// fontWeight: FontWeight.bold),),
+// const Icon(Icons.person)
+// ],),
+// title: Text(
+// "Buyer Name : ${farmerData[index]['name']}"),
+// subtitle: Text(
+// "Phone Number : ${farmerData[index]['phoneNumber']}"),
+//
+//
+// ),
+// );

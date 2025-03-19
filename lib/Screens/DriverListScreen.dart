@@ -119,7 +119,10 @@ class _DriverListScreenState extends State<DriverListScreen>{
                         itemCount: wholeDriverData.length,
                           itemBuilder: (context,index){
                         return Card(
-                          color: AppColors.listTileColor,
+                          elevation: 5,
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16),
+                          side: BorderSide(width: 2,color: AppColors.primaryColor)
+                        ),
                           child: Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: Container(
@@ -143,7 +146,7 @@ class _DriverListScreenState extends State<DriverListScreen>{
                                   ),
                                   customTextRow('Address',wholeDriverData[index]['address']),
                                   customTextRow('VehicleNo',wholeDriverData[index]['vehicleNo']),
-                                  customTextRow('Rate per 100 Km','${wholeDriverData[index]['ratePer100Km'].toString()} Rs'),
+                                  customTextRow('Rate per 100 Km','₹ ${wholeDriverData[index]['ratePer100Km'].toString()} '),
                                   customTextRow('Max Capacity','${wholeDriverData[index]['maxCapacity'].toString()} Tons'),
                                   customTextRow('Experience','${wholeDriverData[index]['drivingExperience'].toString()} years'),
                                   customTextRow('Phone Number','+91-${wholeDriverData[index]['phoneNo']}'),
