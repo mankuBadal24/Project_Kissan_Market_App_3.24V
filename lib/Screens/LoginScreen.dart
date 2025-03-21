@@ -68,14 +68,15 @@ class _LoginScreenState extends State<LoginScreen> {
 
       final responseCode = res.statusCode;
       print("responecode...................$responseCode");
-      responseMsg = jsonDecode(res.body);
-      print(responseMsg);
-      if (responseCode == 200 || responseCode == 201) {
-        showQuickAlert('Login Successful', 'success');
-        // saveUserData.saveUserId(responseMsg['userId'].toString());
-        // saveUserData.saveTypeOfUser(typeOfUser);
-        // saveUserData.saveName(nameCtrl.text.toString());
-        // saveUserData.savePhoneNumber(phoneCtrl.text.toString());
+
+      Map<String,dynamic>response=jsonDecode(res.body);
+      if ((responseCode == 200 || responseCode == 201)&&response["status"]=="success" ) {
+        responseMsg = response["data"];
+
+        saveUserData.saveUserId(responseMsg['userId'].toString());
+        saveUserData.saveTypeOfUser(typeOfUser);
+        saveUserData.saveName(nameCtrl.text.toString());
+        saveUserData.savePhoneNumber(phoneCtrl.text.toString());
         await pref.saveUserData(
             nameCtrl.text.toString(),
             responseMsg['userId'].toString(),
@@ -102,7 +103,7 @@ class _LoginScreenState extends State<LoginScreen> {
         }
       } else {
         showQuickAlert(
-            "Number Already exist or some Technical issue", "warning");
+            response["message"], "warning");
       }
     } catch (e, stackTrace) {
       print("catch is running ${stackTrace}");
@@ -152,30 +153,30 @@ class _LoginScreenState extends State<LoginScreen> {
           await Future.any([loginRequest, Future.delayed(timeoutDuration)]);
       SessionManagement sessionManagement = SessionManagement();
       if (response != null) {
-        print(response.statusCode);
-        if (response.statusCode == 200) {
-          var responseMsg = jsonDecode(response.body);
+        var responseMsg = jsonDecode(response.body);
+        if (responseMsg['status']=='success') {
 
+          print(responseMsg);
           /// this data is stored in the shared preferences which can be accessed after the app is removed from the app
           pref.saveUserData(
-              responseMsg['name'].toString(),
-              responseMsg['userId'].toString(),
-              responseMsg['role'].toString(),
+              responseMsg['data']['name'].toString(),
+              responseMsg['data']['userId'].toString(),
+              responseMsg['data']['role'].toString(),
               phoneCtrl.text.toString());
 
           showQuickAlert('User Login Successfully', 'success');
           textFieldClear();
-          if (responseMsg['role'] == 'FR') {
+          if (responseMsg['data']['role'] == 'FR') {
             sessionManagement.saveSession(
-                '${phoneCtrl.text}${responseMsg['userId'].toString()}_FR',
+                '${phoneCtrl.text}${responseMsg['data']['id'].toString()}_FR',
                 'FR');
             Future.delayed(const Duration(seconds: 1), () {
               Navigator.push(context,
                   MaterialPageRoute(builder: (context) => FarmerHomeScreen()));
             });
-          } else if (responseMsg['role'] == 'BR') {
+          } else if (responseMsg['data']['role'] == 'BR') {
             sessionManagement.saveSession(
-                '${phoneCtrl.text}${responseMsg['userId'].toString()}_BR',
+                '${phoneCtrl.text}${responseMsg['id'].toString()}_BR',
                 'BR');
             Future.delayed(const Duration(seconds: 1), () {
               Navigator.push(context,
@@ -190,7 +191,7 @@ class _LoginScreenState extends State<LoginScreen> {
       }
     } catch (e) {
       print("-----catch is running $e----");
-      showQuickAlert('XXXXSome Exception occurred..$e]]]]', 'error');
+      showQuickAlert('Some Exception occurred..$e', 'error');
     } finally {
       setState(() {
         _isLoading = false;

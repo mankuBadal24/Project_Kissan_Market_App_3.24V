@@ -67,7 +67,6 @@ class _UpdateCropScreenState extends State<UpdateCropScreen> {
     try {
       const timeoutDuration = Duration(seconds: 5);
       String uri = '${URL}api/crops/update';
-      print(uri);
 
       final updateRequest = http.post(
         Uri.parse(uri),
@@ -95,10 +94,11 @@ class _UpdateCropScreenState extends State<UpdateCropScreen> {
 
       if (response != null) {
         if (response.statusCode == 200) {
-          var responseMsg = response.body;
+          var responseMsg = jsonDecode(response.body);
+          await showQuickAlert(responseMsg["message"], 'success');
           textFieldClear();
-          showQuickAlert(responseMsg, 'success');
-          // Future.delayed(const Duration(seconds: 2));
+          // Future.delayed(const Duration(seconds: 1));
+
         } else {
           showQuickAlert(response.statusCode, 'warning');
         }

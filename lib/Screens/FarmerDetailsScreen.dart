@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:kissan_market_app/Api/ApiURL.dart';
 import 'package:kissan_market_app/CustomWidgets/CustomWidgets.dart';
-
 import '../Theme/AppColors.dart';
 class FarmerDetailsScreen extends StatefulWidget{
   final String farmerId;
@@ -19,13 +18,13 @@ class FarmerDetailsScreenState extends State<FarmerDetailsScreen> {
   String URL= ApiURL.getURL();
   bool _isDisposed=false;
   // List cropData=[];
-   late Future<Map <String ,dynamic>>farmerData;
+   late Future<Map <String ,dynamic>>farmerWithCropData;
 
 
 
 
   Future<Map<String, dynamic>> getFarmerDetails() async {
-    late Map <String ,dynamic>futureFarmerData;
+    late Map <String ,dynamic>futureFarmerWithCropData;
     setState(() {
       _isLoading = true;
     });
@@ -53,9 +52,10 @@ class FarmerDetailsScreenState extends State<FarmerDetailsScreen> {
         print(response.statusCode);
       if (response != null) {
         if (response.statusCode == 200) {
-          futureFarmerData = jsonDecode(response.body);
-          print(futureFarmerData);
-          // cropData=farmerData["crops"];
+          Map<String,dynamic>res=jsonDecode(response.body);
+          futureFarmerWithCropData = res["data"];
+
+          // cropData=farmerWithCropData["crops"];
           // showQuickAlert("Data Fetched Successfully", 'success');
           // Future.delayed(const Duration(seconds: 2));
         } else {
@@ -79,7 +79,7 @@ class FarmerDetailsScreenState extends State<FarmerDetailsScreen> {
 
       }
     }
-    return futureFarmerData;
+    return futureFarmerWithCropData;
   }
 
   showQuickAlert(String message ,String type){
@@ -115,14 +115,14 @@ class FarmerDetailsScreenState extends State<FarmerDetailsScreen> {
   @override
   void initState() {
     super.initState();
-   farmerData= getFarmerDetails();
+   farmerWithCropData= getFarmerDetails();
   }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomWidgets.appBar("Farmer Details"),
       body: FutureBuilder<Map<String, dynamic>?>(
-        future: farmerData, // Pass your async data fetching method
+        future: farmerWithCropData, // Pass your async data fetching method
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             // While waiting for the data, show a loading indicator
@@ -136,11 +136,11 @@ class FarmerDetailsScreenState extends State<FarmerDetailsScreen> {
             return Center(child: Text('No data available.'));
           } else {
             // Data has been fetched, now you can use it
-            var wholeData=snapshot.data!;
-            print(wholeData);
-            var farmerDetails =wholeData['registrationDetails'];
-            var cropData= wholeData['crops']; // Access the list of items
-            print(" data type---------${cropData}");
+            var farmerWithCropData=snapshot.data!;
+
+            var farmerDetails =farmerWithCropData['registrationDetails'];
+            List cropData= farmerWithCropData['crops']; // Access the list of items
+
             return
                   Column(
                     children: [
@@ -159,7 +159,7 @@ class FarmerDetailsScreenState extends State<FarmerDetailsScreen> {
                                 shape:const CircleBorder(),
                                 child:  const Icon(Icons.person,color: AppColors.secondaryColor,size: 60,),),
                             ),
-                            Text(wholeData['farmerName'].toUpperCase(),style:const TextStyle(fontSize: 16,fontWeight: FontWeight.bold),),
+                            Text(farmerWithCropData['farmerName'].toUpperCase(),style:const TextStyle(fontSize: 16,fontWeight: FontWeight.bold),),
                             Card(
                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16),side: BorderSide(width: 5,color: AppColors.primaryColor)),
                                 child:Padding(
@@ -293,7 +293,7 @@ class FarmerDetailsScreenState extends State<FarmerDetailsScreen> {
                         // child: Text('hello'),
                         child: ListView.builder(
                             shrinkWrap: true,
-                            itemCount: 1,
+                            itemCount:cropData.length,
                             itemBuilder: (context, index) {
                               int count = index;
 
@@ -348,15 +348,7 @@ class FarmerDetailsScreenState extends State<FarmerDetailsScreen> {
 
                                         ],
                                       ),
-                                      Divider(),
-                                      Row(
-                                        children: [
-                                          Icon(Icons.person,color: AppColors.primaryColor,),
-                                          SizedBox(width: 8,),
-                                          Expanded(child:  Text("Farmer name:${cropData[index]['farmerName']}",style: TextStyle(fontSize: 16,)))
 
-                                        ],
-                                      ),
 
 
                                     ],),

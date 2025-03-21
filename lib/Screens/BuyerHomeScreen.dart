@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:kissan_market_app/Screens/AppDrawerMenuScreen.dart';
 import 'package:kissan_market_app/CustomWidgets/CustomWidgets.dart';
 import 'package:kissan_market_app/Screens/FarmerDetailsScreen.dart';
-import 'package:kissan_market_app/SaveUserData/SaveUserData.dart';
 import 'package:kissan_market_app/Theme/AppColors.dart';
 import 'package:http/http.dart' as http;
 
@@ -52,9 +51,9 @@ class _BuyerHomeScreenState extends State<BuyerHomeScreen>{
 
       if (response != null) {
         if (response.statusCode == 200) {
-          cropData = jsonDecode(response.body);
+          Map<String,dynamic>res=jsonDecode(response.body);
+          cropData = res["data"];
           // cropDataLength=cropData.length as ValueNotifier<int>;
-          print(cropData);
           // showQuickAlert(responseMsg, 'success');
           // Future.delayed(const Duration(seconds: 2));
         } else {

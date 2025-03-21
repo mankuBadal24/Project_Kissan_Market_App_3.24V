@@ -187,21 +187,25 @@ class _FarmerRegistrationState extends State<FarmerRegistrationScreen> {
 
       if (response != null) {
         print(response.statusCode);
-        if (response.statusCode == 200||response.statusCode == 201) {
-          var responseMsg = response.body;
+
+        Map<String,dynamic> responseMsg = jsonDecode(response.body);
+        if ((response.statusCode == 200||response.statusCode == 201)&&responseMsg["status"]=="success") {
+
           // textFieldClear();
-          showQuickAlert(responseMsg, 'success');
+          showQuickAlert(responseMsg["message"], 'success');
           await pref.saveUserData(widget.saveUserData.getName(), widget.saveUserData.getUserId(),'FR' ,widget.saveUserData.getPhoneNumber());
          await Future.delayed(const Duration(seconds: 1));
          Navigator.pushReplacement(context,MaterialPageRoute(builder: (context)=> FarmerHomeScreen()));
         } else {
-          showQuickAlert(response.statusCode.toString(), 'warning');
+          showQuickAlert(responseMsg["message"], 'warning');
+          print(responseMsg["message"]);
         }
       } else {
         showQuickAlert('Server Unreachable...', 'warning');
       }
     } catch (e) {
       showQuickAlert("Some Exception Occurred..$e", 'error');
+      print(e);
       if (!_isDisposed) {
       }
     } finally {

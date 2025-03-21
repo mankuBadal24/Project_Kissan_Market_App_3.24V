@@ -5,7 +5,6 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:kissan_market_app/Api/ApiURL.dart';
 import 'package:kissan_market_app/CustomWidgets/CustomWidgets.dart';
-import 'package:kissan_market_app/SaveUserData/SaveUserData.dart';
 import 'package:kissan_market_app/Theme/AppColors.dart';
 import 'package:kissan_market_app/json_data_classes/TypeOfCropData.dart';
 
@@ -77,6 +76,7 @@ typeOfCropCodeSelected(){
   }
 
  Future addCrops() async{
+   userData= await pref.loadUserData();
     print("addcrops is running........");
    FocusScope.of(context).requestFocus(FocusNode());
    setState(() {
@@ -94,7 +94,7 @@ typeOfCropCodeSelected(){
           'name': nameOfCropCtrl.text,
            'type': selectedCropDesc,
           'quantity': quantityOfCropCtrl.text,
-          'farmerId':userData['userId'].toString(),
+          'farmerId':userData["userId"].toString(),
           'cropCode':selectedCropCode,
           "price":priceOfCropCtrl.text
         }),
@@ -106,10 +106,12 @@ typeOfCropCodeSelected(){
       if(response!=null){
         print("statis code-----------------${response.statusCode}");
         if(response.statusCode==200){
-          var responseMsg = response.body;
-          if (responseMsg== "Crop added successfully") {
+          var responseMsg = jsonDecode(response.body);
+          print(responseMsg);
+          if(responseMsg["status"]=="success") {
+            print("helllo");
             textFieldClear();
-            showQuickAlert("Crop added successfully","success");
+            showQuickAlert(responseMsg["message"],"success");
 
           } else {
             showQuickAlert(response.statusCode,"warning");

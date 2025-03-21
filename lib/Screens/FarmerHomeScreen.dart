@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:kissan_market_app/CustomWidgets/CustomWidgets.dart';
 import 'package:kissan_market_app/Screens/AddCropScreen.dart';
 import 'package:kissan_market_app/Screens/AppDrawerMenuScreen.dart';
-import 'package:kissan_market_app/SaveUserData/SaveUserData.dart';
 import 'package:kissan_market_app/Screens/DriverListScreen.dart';
 import 'package:kissan_market_app/Screens/WareHouseScreen.dart';
 import 'package:kissan_market_app/SessionManagement//SessionManagement.dart';
@@ -42,7 +41,7 @@ class _FarmerHomeScreenState extends State<FarmerHomeScreen>{
   void initState() {
     super.initState();
     // saveUserCredentials();
-    getFarmers();
+    getBuyers();
   }
 
 
@@ -58,18 +57,8 @@ class _FarmerHomeScreenState extends State<FarmerHomeScreen>{
       closeIconColor: AppColors.secondaryColor,
     ));
   }
-  // saveUserCredentials()async{
-  //   userData= await pref.loadUserData();
-  //   SaveUserData saveUserData=SaveUserData();
-  //   saveUserData.saveUserId(userData['userId']!);
-  //   saveUserData.saveName(userData['name']!);
-  //   saveUserData.savePhoneNumber(userData['phoneNumber']!);
-  //   saveUserData.saveTypeOfUser(userData['typeOfUser']!);
-  //   print("${saveUserData.getUserId()}${saveUserData.getName()}");
-  //
-  // }
 
-  Future getFarmers() async{
+  Future getBuyers() async{
     setState(() {
       _isLoading=true;
     });
@@ -91,7 +80,8 @@ class _FarmerHomeScreenState extends State<FarmerHomeScreen>{
       if(response!=null){
         if(response.statusCode==200){
           setState(() {
-            farmerData = jsonDecode(response.body);
+            Map<String,dynamic>res=jsonDecode(response.body);
+            farmerData = res["data"];
             print(farmerData);
           });
         }
