@@ -108,4 +108,9 @@ flutter_icons:
   adaptive_icon_foreground: "assets/images/app-icon.jpg"
   remove_alpha_ios: true
 
+spring:
+  servlet:
+    multipart:
+      max-file-size: 20MB
+      max-request-size: 20MB
 
